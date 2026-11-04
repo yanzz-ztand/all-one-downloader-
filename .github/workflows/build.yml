@@ -166,6 +166,11 @@ jobs:
               private ImageView bg;
               private EditText input;
               private Button btnDownload;
+              private LinearLayout infoBox;
+              private ImageView infoThumbnail;
+              private TextView infoTitle;
+              private TextView infoCaption;
+              private TextView infoType;
               private String[] walls = new String[0];
               private int idx = 0;
 
@@ -268,6 +273,51 @@ jobs:
                   LinearLayout.LayoutParams lpLink = new LinearLayout.LayoutParams(-1, -2);
                   lpLink.topMargin = dp(24);
                   center.addView(linkBox, lpLink);
+
+                  infoBox = new LinearLayout(this);
+                  infoBox.setOrientation(LinearLayout.VERTICAL);
+                  infoBox.setPadding(dp(12), dp(12), dp(12), dp(12));
+                  infoBox.setBackground(pill(0xCC222222, 16));
+                  infoBox.setVisibility(View.GONE);
+
+                  TextView infoHeading = new TextView(this);
+                  infoHeading.setText("Tipe Download");
+                  infoHeading.setTextColor(0xFFF2B93B);
+                  infoHeading.setTextSize(17);
+                  infoHeading.setTypeface(null, Typeface.BOLD);
+                  infoBox.addView(infoHeading);
+
+                  infoThumbnail = new ImageView(this);
+                  infoThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                  LinearLayout.LayoutParams thumbLp = new LinearLayout.LayoutParams(-1, dp(150));
+                  thumbLp.topMargin = dp(8);
+                  infoBox.addView(infoThumbnail, thumbLp);
+
+                  infoTitle = new TextView(this);
+                  infoTitle.setTextColor(Color.WHITE);
+                  infoTitle.setTextSize(18);
+                  infoTitle.setTypeface(null, Typeface.BOLD);
+                  LinearLayout.LayoutParams titleLp = new LinearLayout.LayoutParams(-1, -2);
+                  titleLp.topMargin = dp(10);
+                  infoBox.addView(infoTitle, titleLp);
+
+                  infoCaption = new TextView(this);
+                  infoCaption.setTextColor(0xFFE0E0E0);
+                  infoCaption.setTextSize(14);
+                  LinearLayout.LayoutParams captionLp = new LinearLayout.LayoutParams(-1, -2);
+                  captionLp.topMargin = dp(5);
+                  infoBox.addView(infoCaption, captionLp);
+
+                  infoType = new TextView(this);
+                  infoType.setTextColor(0xFFF2B93B);
+                  infoType.setTextSize(13);
+                  LinearLayout.LayoutParams typeLp = new LinearLayout.LayoutParams(-1, -2);
+                  typeLp.topMargin = dp(7);
+                  infoBox.addView(infoType, typeLp);
+
+                  LinearLayout.LayoutParams infoLp = new LinearLayout.LayoutParams(-1, -2);
+                  infoLp.topMargin = dp(14);
+                  center.addView(infoBox, infoLp);
 
                   btnDownload = new Button(this);
                   btnDownload.setText("Download");
@@ -423,8 +473,11 @@ jobs:
                   btnDownload.setText("Loading...");
                   new Thread(() -> {
                       try {
-                          String[] res = fetchMedia(link); // {url, ext}
-                          runOnUiThread(() -> enqueue(res[0], res[1]));
+                          String[] res = fetchMedia(link); // url, ext, title, caption, thumbnail, type
+                          runOnUiThread(() -> {
+                              showDownloadInfo(res);
+                              enqueue(res[0], res[1]);
+                          });
                       } catch (Exception e) {
                           final String msg = e.getMessage();
                           runOnUiThread(() -> toast("Gagal: " + msg));
@@ -486,7 +539,51 @@ jobs:
                   }
                   if (pick == null) pick = medias.getJSONObject(0);
 
-                  return new String[]{pick.getString("url"), pick.optString("extension", "mp4")};
+                  String title = result.optString("title", "").trim();
+                  String caption = result.optString("caption", "").trim();
+                  if (caption.isEmpty()) caption = result.optString("source", "").trim();
+                  String thumbnailUrl = result.optString("thumbnail", "").trim();
+                  String mediaType = result.optString("type", "single").trim();
+
+                  // Field author/creator sengaja tidak ditampilkan.
+                  return new String[]{
+                          pick.getString("url"),
+                          pick.optString("extension", "mp4"),
+                          title,
+                          caption,
+                          thumbnailUrl,
+                          mediaType
+                  };
+              }
+
+              private void showDownloadInfo(String[] data) {
+                  infoBox.setVisibility(View.VISIBLE);
+                  infoTitle.setText(data[2].isEmpty() ? "Tanpa Title" : data[2]);
+                  infoCaption.setText(data[3].isEmpty() ? "Caption tidak tersedia" : data[3]);
+                  infoType.setText("Media: " + data[5] + " • Format: " + data[1].toUpperCase());
+                  infoThumbnail.setImageDrawable(null);
+
+                  if (!data[4].isEmpty()) {
+                      new Thread(() -> {
+                          HttpURLConnection connection = null;
+                          try {
+                              connection = (HttpURLConnection) new URL(data[4]).openConnection();
+                              connection.setConnectTimeout(15000);
+                              connection.setReadTimeout(15000);
+                              connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+                              Bitmap bitmap;
+                              try (InputStream stream = connection.getInputStream()) {
+                                  bitmap = BitmapFactory.decodeStream(stream);
+                              }
+                              if (bitmap != null) {
+                                  runOnUiThread(() -> infoThumbnail.setImageBitmap(bitmap));
+                              }
+                          } catch (Exception ignored) {
+                          } finally {
+                              if (connection != null) connection.disconnect();
+                          }
+                      }).start();
+                  }
               }
 
               private void enqueue(String url, String ext) {
