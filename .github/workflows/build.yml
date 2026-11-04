@@ -513,6 +513,10 @@ jobs:
       - name: Generate app icon
         run: |
           # Taruh gambar icon di root repo dengan nama "icon.png" (disarankan persegi, min 512x512)
+          if ! command -v magick >/dev/null 2>&1 && ! command -v convert >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y imagemagick
+          fi
           if command -v magick >/dev/null 2>&1; then IM=magick; else IM=convert; fi
           if [ ! -f icon.png ]; then
             echo "icon.png tidak ditemukan, pakai icon default"
