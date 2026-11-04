@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate Android project
         run: |
-          mkdir -p app/src/main/java/com/ikyy/downloader
+          mkdir -p app/src/main/java/com/all/downloader
           mkdir -p app/src/main/assets/wallpapers
 
           # Wallpapers: taruh gambar (jpg/png) di folder "wallpapers/" di repo
@@ -48,7 +48,7 @@ jobs:
                   mavenCentral()
               }
           }
-          rootProject.name = "IkyyDownloader"
+          rootProject.name = "AllinOneDownloader"
           include ':app'
           EOF
 
@@ -69,11 +69,11 @@ jobs:
           }
 
           android {
-              namespace 'com.ikyy.downloader'
+              namespace 'com.all.downloader'
               compileSdk 34
 
               defaultConfig {
-                  applicationId "com.ikyy.downloader"
+                  applicationId "com.all.downloader"
                   minSdk 29
                   targetSdk 34
                   versionCode 1
@@ -96,8 +96,9 @@ jobs:
               <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
               <application
-                  android:label="Ikyy Downloader"
+                  android:label="All Downloader"
                   android:allowBackup="true"
+                  android:icon="@mipmap/ic_launcher"
                   android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
                   <activity
                       android:name=".MainActivity"
@@ -112,8 +113,8 @@ jobs:
           </manifest>
           EOF
 
-          cat > app/src/main/java/com/ikyy/downloader/MainActivity.java <<'EOF'
-          package com.ikyy.downloader;
+          cat > app/src/main/java/com/all/downloader/MainActivity.java <<'EOF'
+          package com.all.downloader;
 
           import android.app.Activity;
           import android.app.DownloadManager;
@@ -509,11 +510,26 @@ jobs:
           }
           EOF
 
+      - name: Generate app icon
+        run: |
+          # Taruh gambar icon di root repo dengan nama "icon.png" (disarankan persegi, min 512x512)
+          if command -v magick >/dev/null 2>&1; then IM=magick; else IM=convert; fi
+          if [ ! -f icon.png ]; then
+            echo "icon.png tidak ditemukan, pakai icon default"
+            $IM -size 512x512 xc:'#F2B93B' icon.png
+          fi
+          for entry in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
+            dir="app/src/main/res/mipmap-${entry%%:*}"
+            size="${entry##*:}"
+            mkdir -p "$dir"
+            $IM icon.png -gravity center -crop 1:1 +repage -resize ${size}x${size} "$dir/ic_launcher.png"
+          done
+
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
-          name: IkyyDownloader-apk
+          name: AllinOneDownloader-apk
           path: app/build/outputs/apk/debug/app-debug.apk
