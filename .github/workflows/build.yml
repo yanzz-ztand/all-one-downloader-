@@ -708,7 +708,7 @@ jobs:
                   }).start();
               }
 
-              private void clearWallpaper() {
+              private void removeCustomWallpaper() {
                   String old = prefs.getString("wall_path", null);
                   if (old != null) new File(old).delete();
                   prefs.edit().remove("wall_path").remove("wall_type").apply();
@@ -1138,7 +1138,7 @@ jobs:
                   pick.setOnClickListener(v -> pickWallpaper());
                   col.addView(pick, lp(-1, dp(50), 0, dp(10), 0, 0));
                   Button del = button("Hapus Wallpaper", false);
-                  del.setOnClickListener(v -> clearWallpaper());
+                  del.setOnClickListener(v -> removeCustomWallpaper());
                   col.addView(del, lp(-1, dp(50), 0, dp(8), 0, 0));
 
                   return scroll(col);
