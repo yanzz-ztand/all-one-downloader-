@@ -29,10 +29,6 @@ jobs:
       - name: Generate Android project
         run: |
           mkdir -p app/src/main/java/com/all/downloader
-          mkdir -p app/src/main/assets/wallpapers
-
-          # Wallpapers: taruh gambar (jpg/png) di folder "wallpapers/" di repo
-          if [ -d wallpapers ]; then cp wallpapers/* app/src/main/assets/wallpapers/ 2>/dev/null || true; fi
 
           cat > settings.gradle <<'EOF'
           pluginManagement {
@@ -76,8 +72,8 @@ jobs:
                   applicationId "com.all.downloader"
                   minSdk 29
                   targetSdk 34
-                  versionCode 1
-                  versionName "1.0"
+                  versionCode 2
+                  versionName "2.0"
               }
 
               compileOptions {
@@ -92,17 +88,20 @@ jobs:
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
               <uses-permission android:name="android.permission.INTERNET" />
-              <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-              <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
               <application
                   android:label="All Downloader"
                   android:allowBackup="true"
+                  android:usesCleartextTraffic="true"
                   android:icon="@mipmap/ic_launcher"
                   android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
                   <activity
                       android:name=".MainActivity"
-                      android:exported="true">
+                      android:exported="true"
+                      android:screenOrientation="portrait"
+                      android:configChanges="orientation|screenSize|keyboardHidden"
+                      android:windowSoftInputMode="adjustResize">
                       <intent-filter>
                           <action android:name="android.intent.action.MAIN" />
                           <category android:name="android.intent.category.LAUNCHER" />
@@ -113,496 +112,1376 @@ jobs:
           </manifest>
           EOF
 
+          mkdir -p app/src/main/res/drawable
+
+          cat > app/src/main/res/drawable/ic_download.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M 19 9 h -4 V 3 H 9 v 6 H 5 l 7 7 7 -7 z M 5 18 v 2 h 14 v -2 H 5 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_paste.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M 19 2 h -4.18 C 14.4 0.84 13.3 0 12 0 c -1.3 0 -2.4 0.84 -2.82 2 H 5 c -1.1 0 -2 0.9 -2 2 v 16 c 0 1.1 0.9 2 2 2 h 14 c 1.1 0 2 -0.9 2 -2 V 4 c 0 -1.1 -0.9 -2 -2 -2 z m -7 0 c 0.55 0 1 0.45 1 1 s -0.45 1 -1 1 -1 -0.45 -1 -1 0.45 -1 1 -1 z m 7 18 H 5 V 4 h 2 v 3 h 10 V 4 h 2 v 16 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_close.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M 19 6.41 L 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_check.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M 9 16.17 L 4.83 12 l -1.42 1.41 L 9 19 21 7 l -1.41 -1.41 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_home.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M 10 20 v -6 h 4 v 6 h 5 v -8 h 3 L 12 3 2 12 h 3 v 8 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_history.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M 13 3 c -4.97 0 -9 4.03 -9 9 H 1 l 3.89 3.89 0.07 0.14 L 9 12 H 6 c 0 -3.87 3.13 -7 7 -7 s 7 3.13 7 7 -3.13 7 -7 7 c -1.93 0 -3.68 -0.79 -4.94 -2.06 l -1.42 1.42 C 8.27 19.99 10.51 21 13 21 c 4.97 0 9 -4.03 9 -9 s -4.03 -9 -9 -9 z M 12 8 v 5 l 4.28 2.54 0.72 -1.21 -3.5 -2.08 V 8 H 12 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_profile.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M 12 12 c 2.21 0 4 -1.79 4 -4 s -1.79 -4 -4 -4 -4 1.79 -4 4 1.79 4 4 4 z M 12 14 c -2.67 0 -8 1.34 -8 4 v 2 h 16 v -2 c 0 -2.66 -5.33 -4 -8 -4 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_settings.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M 19.14 12.94 c 0.04 -0.3 0.06 -0.61 0.06 -0.94 c 0 -0.32 -0.02 -0.64 -0.07 -0.94 l 2.03 -1.58 c 0.18 -0.14 0.23 -0.41 0.12 -0.61 l -1.92 -3.32 c -0.12 -0.22 -0.37 -0.29 -0.59 -0.22 l -2.39 0.96 c -0.5 -0.38 -1.03 -0.7 -1.62 -0.94 L 14.4 2.81 c -0.04 -0.24 -0.24 -0.41 -0.48 -0.41 h -3.84 c -0.24 0 -0.43 0.17 -0.47 0.41 L 9.25 5.35 C 8.66 5.59 8.12 5.92 7.63 6.29 L 5.24 5.33 c -0.22 -0.08 -0.47 0 -0.59 0.22 L 2.74 8.87 C 2.62 9.08 2.66 9.34 2.86 9.48 l 2.03 1.58 C 4.84 11.36 4.8 11.69 4.8 12 s 0.02 0.64 0.07 0.94 l -2.03 1.58 c -0.18 0.14 -0.23 0.41 -0.12 0.61 l 1.92 3.32 c 0.12 0.22 0.37 0.29 0.59 0.22 l 2.39 -0.96 c 0.5 0.38 1.03 0.7 1.62 0.94 l 0.36 2.54 c 0.05 0.24 0.24 0.41 0.48 0.41 h 3.84 c 0.24 0 0.44 -0.17 0.47 -0.41 l 0.36 -2.54 c 0.59 -0.24 1.13 -0.56 1.62 -0.94 l 2.39 0.96 c 0.22 0.08 0.47 0 0.59 -0.22 l 1.92 -3.32 c 0.12 -0.22 0.07 -0.47 -0.12 -0.61 L 19.14 12.94 z M 12 15.6 c -1.98 0 -3.6 -1.62 -3.6 -3.6 s 1.62 -3.6 3.6 -3.6 s 3.6 1.62 3.6 3.6 S 13.98 15.6 12 15.6 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_tiktok.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#000000" android:pathData="M 12 0 a 12 12 0 1 0 0.001 0 z"/>
+              <group android:translateX="4.2" android:translateY="4.6" android:scaleX="0.6" android:scaleY="0.6">
+                  <path android:fillColor="#25F4EE" android:pathData="M 12 3 v 10.55 c -0.59 -0.34 -1.27 -0.55 -2 -0.55 -2.21 0 -4 1.79 -4 4 s 1.79 4 4 4 4 -1.79 4 -4 V 7 h 4 V 3 h -6 z"/>
+              </group>
+              <group android:translateX="5.2" android:translateY="5.2" android:scaleX="0.6" android:scaleY="0.6">
+                  <path android:fillColor="#FE2C55" android:pathData="M 12 3 v 10.55 c -0.59 -0.34 -1.27 -0.55 -2 -0.55 -2.21 0 -4 1.79 -4 4 s 1.79 4 4 4 4 -1.79 4 -4 V 7 h 4 V 3 h -6 z"/>
+              </group>
+              <group android:translateX="4.7" android:translateY="4.9" android:scaleX="0.6" android:scaleY="0.6">
+                  <path android:fillColor="#FFFFFF" android:pathData="M 12 3 v 10.55 c -0.59 -0.34 -1.27 -0.55 -2 -0.55 -2.21 0 -4 1.79 -4 4 s 1.79 4 4 4 4 -1.79 4 -4 V 7 h 4 V 3 h -6 z"/>
+              </group>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_youtube.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FF0000" android:pathData="M 4 5 h 16 a 3 3 0 0 1 3 3 v 8 a 3 3 0 0 1 -3 3 H 4 a 3 3 0 0 1 -3 -3 V 8 a 3 3 0 0 1 3 -3 z"/>
+              <path android:fillColor="#FFFFFF" android:pathData="M 10 8.8 l 5.4 3.2 -5.4 3.2 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_instagram.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:pathData="M 6 0 h 12 a 6 6 0 0 1 6 6 v 12 a 6 6 0 0 1 -6 6 H 6 a 6 6 0 0 1 -6 -6 V 6 a 6 6 0 0 1 6 -6 z">
+                  <aapt:attr name="android:fillColor">
+                      <gradient android:type="linear" android:startX="0" android:startY="24" android:endX="24" android:endY="0">
+                          <item android:offset="0.0" android:color="#FEDA75"/>
+                          <item android:offset="0.3" android:color="#FA7E1E"/>
+                          <item android:offset="0.55" android:color="#D62976"/>
+                          <item android:offset="0.8" android:color="#962FBF"/>
+                          <item android:offset="1.0" android:color="#4F5BD5"/>
+                      </gradient>
+                  </aapt:attr>
+              </path>
+              <path android:strokeColor="#FFFFFF" android:strokeWidth="1.8" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M 8.5 5 h 7 a 3.5 3.5 0 0 1 3.5 3.5 v 7 a 3.5 3.5 0 0 1 -3.5 3.5 h -7 a 3.5 3.5 0 0 1 -3.5 -3.5 v -7 a 3.5 3.5 0 0 1 3.5 -3.5 z"/>
+              <path android:strokeColor="#FFFFFF" android:strokeWidth="1.8" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M 12 8.5 a 3.5 3.5 0 1 0 0.001 0 z"/>
+              <path android:fillColor="#FFFFFF" android:pathData="M 16.4 6.6 a 1.05 1.05 0 1 0 0.001 0 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_facebook.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#1877F2" android:pathData="M 12 0 a 12 12 0 1 0 0.001 0 z"/>
+              <path android:fillColor="#FFFFFF" android:pathData="M 13.5 21 v -7 h 2.4 l 0.4 -3 h -2.8 V 9.2 c 0 -0.8 0.3 -1.3 1.4 -1.3 h 1.5 V 5.2 C 16.1 5.1 15.3 5 14.3 5 12.3 5 10.9 6.2 10.9 8.5 V 11 H 8.5 v 3 h 2.4 v 7 z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_twitter.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#1DA1F2" android:pathData="M 12 0 a 12 12 0 1 0 0.001 0 z"/>
+              <group android:translateX="4" android:translateY="4.2" android:scaleX="0.67" android:scaleY="0.67">
+                  <path android:fillColor="#FFFFFF" android:pathData="M 23.953 4.57 a 10 10 0 0 1 -2.825 .775 4.958 4.958 0 0 0 2.163 -2.723 c -.951 .555 -2.005 .959 -3.127 1.184 a 4.92 4.92 0 0 0 -8.384 4.482 C 7.69 8.095 4.067 6.13 1.64 3.162 a 4.822 4.822 0 0 0 -.666 2.475 c 0 1.71 .87 3.213 2.188 4.096 a 4.904 4.904 0 0 1 -2.228 -.616 v .06 a 4.923 4.923 0 0 0 3.946 4.827 4.996 4.996 0 0 1 -2.212 .085 4.936 4.936 0 0 0 4.604 3.417 9.867 9.867 0 0 1 -6.102 2.105 c -.39 0 -.779 -.023 -1.17 -.067 a 13.995 13.995 0 0 0 7.557 2.209 c 9.053 0 13.998 -7.496 13.998 -13.985 0 -.21 0 -.42 -.015 -.63 A 9.935 9.935 0 0 0 24 4.59 z"/>
+              </group>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_spotify.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#1DB954" android:pathData="M 12 0 a 12 12 0 1 0 0.001 0 z"/>
+              <path android:strokeColor="#000000" android:strokeWidth="2" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M 6.3 9 c 3.8 -1.1 8.3 -0.7 11.5 1.2"/>
+              <path android:strokeColor="#000000" android:strokeWidth="1.7" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M 7 12.3 c 3.1 -0.9 6.7 -0.6 9.5 1.1"/>
+              <path android:strokeColor="#000000" android:strokeWidth="1.4" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M 7.7 15.4 c 2.5 -0.7 5.4 -0.4 7.7 0.9"/>
+          </vector>
+          EOF
+
           cat > app/src/main/java/com/all/downloader/MainActivity.java <<'EOF'
           package com.all.downloader;
 
           import android.app.Activity;
-          import android.app.DownloadManager;
-          import android.Manifest;
-          import android.content.Intent;
-          import android.content.pm.PackageManager;
-          import android.os.Build;
-          import java.io.File;
-          import java.io.FileOutputStream;
-          import java.io.OutputStream;
-          import android.content.ClipData;
           import android.content.ClipboardManager;
+          import android.content.ContentResolver;
+          import android.content.ContentValues;
           import android.content.Context;
+          import android.content.Intent;
+          import android.content.SharedPreferences;
+          import android.content.res.ColorStateList;
           import android.graphics.Bitmap;
+          import android.graphics.Canvas;
+          import android.graphics.Paint;
+          import android.graphics.RectF;
+          import android.graphics.SweepGradient;
           import android.graphics.BitmapFactory;
           import android.graphics.Color;
+          import android.graphics.Matrix;
+          import android.graphics.SurfaceTexture;
           import android.graphics.Typeface;
           import android.graphics.drawable.GradientDrawable;
+          import android.media.MediaPlayer;
           import android.net.Uri;
           import android.os.Bundle;
           import android.os.Environment;
+          import android.provider.MediaStore;
+          import android.text.Editable;
+          import android.text.InputType;
+          import android.text.TextUtils;
+          import android.text.TextWatcher;
           import android.view.Gravity;
+          import android.view.Surface;
+          import android.view.TextureView;
           import android.view.View;
-          import android.view.ViewGroup;
+          import android.webkit.MimeTypeMap;
           import android.widget.Button;
           import android.widget.EditText;
           import android.widget.FrameLayout;
           import android.widget.ImageView;
           import android.widget.LinearLayout;
-          import android.widget.TextClock;
+          import android.widget.ProgressBar;
+          import android.widget.ScrollView;
+          import android.widget.SeekBar;
           import android.widget.TextView;
           import android.widget.Toast;
 
           import org.json.JSONArray;
           import org.json.JSONObject;
 
-          import java.io.BufferedReader;
+          import java.io.ByteArrayOutputStream;
+          import java.io.File;
+          import java.io.FileOutputStream;
           import java.io.InputStream;
-          import java.io.InputStreamReader;
+          import java.io.OutputStream;
           import java.net.HttpURLConnection;
           import java.net.URL;
           import java.net.URLEncoder;
+          import java.text.SimpleDateFormat;
+          import java.util.ArrayList;
+          import java.util.Collections;
+          import java.util.Date;
+          import java.util.Locale;
 
           public class MainActivity extends Activity {
 
-              private static final String API =
-                      "https://api.ikyyxd.my.id/download/all-in-one?url=";
+              private static final String API = "https://api.ikyyxd.my.id/download/all-in-one?url=";
+              private static final String UA = "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36";
+              private static final int REQ_PICK = 101;
+              private static final int WHITE = Color.WHITE;
 
-              private ImageView bg;
+              // {bg, card, accent, accent2}
+              private static final int[][] PRESETS = {
+                      {0xFF1A0B3B, 0xFF2E1A5E, 0xFF8E2DE2, 0xFF5B3FE0},
+                      {0xFF04222B, 0xFF0B3C4A, 0xFF00C2D1, 0xFF2979FF},
+                      {0xFF2B0A1E, 0xFF4A1633, 0xFFFF4081, 0xFFFF8A50},
+                      {0xFF06241A, 0xFF0D3F2D, 0xFF1DB954, 0xFF00BFA5},
+                      {0xFF241006, 0xFF40200C, 0xFFFF6D00, 0xFFFFC107}
+              };
+              private static final String[] THEME_NAMES = {"Purple Neon", "Cyan Wave", "Pink Sunset", "Emerald", "Orange Fire", "Custom"};
+
+              static class Task {
+                  String name = "";
+                  String label = "0%";
+                  int progress = -1;
+                  ProgressBar bar;
+                  TextView pct;
+              }
+
+              // lingkaran loading warna-warni yang berputar
+              static class RainbowSpinner extends View {
+                  private final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+                  private final RectF r = new RectF();
+                  private float angle = 0f;
+
+                  RainbowSpinner(Context c) {
+                      super(c);
+                      p.setStyle(Paint.Style.STROKE);
+                      p.setStrokeCap(Paint.Cap.ROUND);
+                  }
+
+                  @Override
+                  protected void onSizeChanged(int w, int h, int ow, int oh) {
+                      super.onSizeChanged(w, h, ow, oh);
+                      float sw = Math.min(w, h) * 0.12f;
+                      p.setStrokeWidth(sw);
+                      float half = sw / 2f + 1f;
+                      r.set(half, half, w - half, h - half);
+                      p.setShader(new SweepGradient(w / 2f, h / 2f,
+                              new int[]{0xFFFF1744, 0xFFFFEA00, 0xFF00E676, 0xFF00B0FF, 0xFFD500F9, 0xFFFF1744}, null));
+                  }
+
+                  @Override
+                  protected void onDraw(Canvas cv) {
+                      cv.save();
+                      cv.rotate(angle, getWidth() / 2f, getHeight() / 2f);
+                      cv.drawArc(r, 0, 300, false, p);
+                      cv.restore();
+                      angle = (angle + 7f) % 360f;
+                      postInvalidateOnAnimation();
+                  }
+              }
+
+              static class Plan {
+                  ArrayList<JSONObject> list = new ArrayList<>();
+                  boolean all = false;
+              }
+
+              private SharedPreferences prefs;
+              private FrameLayout root, content;
+              private ImageView wallImg;
+              private TextureView wallVideo;
+              private SurfaceTexture videoSt;
+              private Surface videoSurface;
+              private MediaPlayer player;
+              private View dim;
+              private LinearLayout ui, navBox, recentBox;
               private EditText input;
-              private Button btnDownload;
-              private LinearLayout infoBox;
-              private ImageView infoThumbnail;
-              private TextView infoTitle;
-              private TextView infoCaption;
-              private TextView infoType;
-              private String[] walls = new String[0];
-              private int idx = 0;
 
+              private int cBg, cCard, cAcc, cAcc2;
+              private boolean hasWall = false;
+              private int tab = 0;
+              private String linkText = "";
+              private final ArrayList<Task> tasks = new ArrayList<>();
+
+              // ---------- helpers ----------
               private int dp(int v) {
                   return (int) (v * getResources().getDisplayMetrics().density);
               }
 
-              private GradientDrawable pill(int color, int radiusDp) {
+              private int withAlpha(int c, int a) {
+                  return (c & 0x00FFFFFF) | (a << 24);
+              }
+
+              private int hsv(float h, float s, float v) {
+                  return Color.HSVToColor(new float[]{h % 360f, s, v});
+              }
+
+              private GradientDrawable shape(int color, int r) {
                   GradientDrawable g = new GradientDrawable();
                   g.setColor(color);
-                  g.setCornerRadius(dp(radiusDp));
+                  g.setCornerRadius(dp(r));
                   return g;
               }
 
+              private GradientDrawable grad(int c1, int c2, int r) {
+                  GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{c1, c2});
+                  g.setCornerRadius(dp(r));
+                  return g;
+              }
+
+              private TextView tv(String s, int size, int color, boolean bold) {
+                  TextView t = new TextView(this);
+                  t.setText(s);
+                  t.setTextSize(size);
+                  t.setTextColor(color);
+                  if (bold) t.setTypeface(Typeface.DEFAULT_BOLD);
+                  return t;
+              }
+
+              private ImageView icon(int res, int padDp, int tint) {
+                  ImageView i = new ImageView(this);
+                  i.setImageResource(res);
+                  i.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                  i.setPadding(dp(padDp), dp(padDp), dp(padDp), dp(padDp));
+                  if (tint != 0) i.setColorFilter(tint);
+                  return i;
+              }
+
+              private LinearLayout.LayoutParams lp(int w, int h, int l, int t, int r, int b) {
+                  LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(w, h);
+                  p.setMargins(l, t, r, b);
+                  return p;
+              }
+
+              private void toast(String s) {
+                  Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+              }
+
+              private LinearLayout column() {
+                  LinearLayout col = new LinearLayout(this);
+                  col.setOrientation(LinearLayout.VERTICAL);
+                  col.setPadding(dp(18), dp(14), dp(18), dp(10));
+                  return col;
+              }
+
+              private ScrollView scroll(LinearLayout col) {
+                  ScrollView s = new ScrollView(this);
+                  s.setVerticalScrollBarEnabled(false);
+                  s.addView(col);
+                  return s;
+              }
+
+              private Button button(String text, boolean primary) {
+                  Button b = new Button(this);
+                  b.setText(text);
+                  b.setAllCaps(false);
+                  b.setTextSize(16);
+                  b.setTextColor(WHITE);
+                  b.setTypeface(Typeface.DEFAULT_BOLD);
+                  b.setBackground(primary ? grad(cAcc, cAcc2, 27) : shape(withAlpha(cCard, 0xDD), 27));
+                  return b;
+              }
+
+              // ---------- theme ----------
+              private void loadTheme() {
+                  int th = prefs.getInt("theme", 0);
+                  int hue = prefs.getInt("hue", 270);
+                  if (th >= 0 && th < PRESETS.length) {
+                      cBg = PRESETS[th][0];
+                      cCard = PRESETS[th][1];
+                      cAcc = PRESETS[th][2];
+                      cAcc2 = PRESETS[th][3];
+                  } else {
+                      cBg = hsv(hue, 0.80f, 0.14f);
+                      cCard = hsv(hue, 0.65f, 0.32f);
+                      cAcc = hsv(hue, 0.80f, 0.90f);
+                      cAcc2 = hsv(hue + 40, 0.80f, 0.95f);
+                  }
+              }
+
+              private void applyColors() {
+                  getWindow().setStatusBarColor(cBg);
+                  getWindow().setNavigationBarColor(cBg);
+                  GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{cCard, cBg});
+                  root.setBackground(g);
+                  dim.setBackgroundColor(hasWall ? withAlpha(cBg, 0x99) : 0);
+              }
+
+              // ---------- lifecycle ----------
               @Override
               protected void onCreate(Bundle b) {
                   super.onCreate(b);
-                  getWindow().setStatusBarColor(Color.TRANSPARENT);
-                  getWindow().setNavigationBarColor(Color.BLACK);
+                  prefs = getSharedPreferences("aio", MODE_PRIVATE);
+                  loadTheme();
 
-                  FrameLayout root = new FrameLayout(this);
-                  root.setBackgroundColor(Color.BLACK);
+                  root = new FrameLayout(this);
 
-                  bg = new ImageView(this);
-                  bg.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                  root.addView(bg, new FrameLayout.LayoutParams(-1, -1));
+                  wallImg = new ImageView(this);
+                  wallImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                  root.addView(wallImg, new FrameLayout.LayoutParams(-1, -1));
 
-                  // overlay gelap tipis
-                  View dim = new View(this);
-                  dim.setBackgroundColor(0x40000000);
+                  wallVideo = new TextureView(this);
+                  wallVideo.setVisibility(View.GONE);
+                  wallVideo.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+                      @Override
+                      public void onSurfaceTextureAvailable(SurfaceTexture st, int w, int h) {
+                          videoSt = st;
+                          startVideo();
+                      }
+
+                      @Override
+                      public void onSurfaceTextureSizeChanged(SurfaceTexture st, int w, int h) {
+                      }
+
+                      @Override
+                      public boolean onSurfaceTextureDestroyed(SurfaceTexture st) {
+                          stopVideo();
+                          videoSt = null;
+                          return true;
+                      }
+
+                      @Override
+                      public void onSurfaceTextureUpdated(SurfaceTexture st) {
+                      }
+                  });
+                  root.addView(wallVideo, new FrameLayout.LayoutParams(-1, -1));
+
+                  dim = new View(this);
                   root.addView(dim, new FrameLayout.LayoutParams(-1, -1));
 
-                  // Switch Wallpaper (kiri atas)
-                  LinearLayout top = new LinearLayout(this);
-                  top.setOrientation(LinearLayout.HORIZONTAL);
-                  top.setGravity(Gravity.CENTER_VERTICAL);
-                  top.setPadding(dp(16), dp(40), dp(16), 0);
-
-                  TextView play = new TextView(this);
-                  play.setText("\u25B6");
-                  play.setTextColor(Color.WHITE);
-                  play.setTextSize(22);
-                  play.setGravity(Gravity.CENTER);
-                  play.setBackground(pill(0xFF000000, 10));
-                  top.addView(play, new LinearLayout.LayoutParams(dp(56), dp(56)));
-
-                  TextView sw = new TextView(this);
-                  sw.setText("Switch Wallpaper");
-                  sw.setTextColor(Color.WHITE);
-                  sw.setTextSize(22);
-                  sw.setShadowLayer(8, 0, 0, Color.BLACK);
-                  sw.setPadding(dp(14), 0, 0, 0);
-                  top.addView(sw);
-
-                  top.setOnClickListener(v -> pickWallpaper());
-                  top.setOnLongClickListener(v -> {
-                      nextWallpaper();
-                      return true;
-                  });
-                  root.addView(top, new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.START));
-
-                  // Konten tengah
-                  LinearLayout center = new LinearLayout(this);
-                  center.setOrientation(LinearLayout.VERTICAL);
-                  center.setGravity(Gravity.CENTER_HORIZONTAL);
-                  center.setPadding(dp(14), 0, dp(14), 0);
-
-                  TextClock clock = new TextClock(this);
-                  clock.setFormat24Hour("HH:mm");
-                  clock.setFormat12Hour("HH:mm");
-                  clock.setTextColor(Color.WHITE);
-                  clock.setTextSize(72);
-                  clock.setTypeface(Typeface.DEFAULT_BOLD);
-                  clock.setShadowLayer(16, 0, 0, 0xFFFFFFFF);
-                  center.addView(clock);
-
-                  // Kolom link + tombol paste
-                  FrameLayout linkBox = new FrameLayout(this);
-                  linkBox.setBackground(pill(0x99333333, 18));
-
-                  input = new EditText(this);
-                  input.setHint("Link Download");
-                  input.setHintTextColor(Color.WHITE);
-                  input.setTextColor(Color.WHITE);
-                  input.setTextSize(18);
-                  input.setSingleLine(true);
-                  input.setGravity(Gravity.CENTER);
-                  input.setBackground(null);
-                  input.setPadding(dp(56), dp(14), dp(56), dp(14));
-                  linkBox.addView(input, new FrameLayout.LayoutParams(-1, -2));
-
-                  TextView paste = new TextView(this);
-                  paste.setText("\uD83D\uDCCB");
-                  paste.setTextSize(22);
-                  paste.setGravity(Gravity.CENTER);
-                  paste.setOnClickListener(v -> pasteClipboard());
-                  linkBox.addView(paste, new FrameLayout.LayoutParams(dp(52), dp(52),
-                          Gravity.END | Gravity.CENTER_VERTICAL));
-
-                  LinearLayout.LayoutParams lpLink = new LinearLayout.LayoutParams(-1, -2);
-                  lpLink.topMargin = dp(24);
-                  center.addView(linkBox, lpLink);
-
-                  infoBox = new LinearLayout(this);
-                  infoBox.setOrientation(LinearLayout.VERTICAL);
-                  infoBox.setPadding(dp(12), dp(12), dp(12), dp(12));
-                  infoBox.setBackground(pill(0xCC222222, 16));
-                  infoBox.setVisibility(View.GONE);
-
-                  TextView infoHeading = new TextView(this);
-                  infoHeading.setText("Tipe Download");
-                  infoHeading.setTextColor(0xFFF2B93B);
-                  infoHeading.setTextSize(17);
-                  infoHeading.setTypeface(null, Typeface.BOLD);
-                  infoBox.addView(infoHeading);
-
-                  infoThumbnail = new ImageView(this);
-                  infoThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                  LinearLayout.LayoutParams thumbLp = new LinearLayout.LayoutParams(-1, dp(150));
-                  thumbLp.topMargin = dp(8);
-                  infoBox.addView(infoThumbnail, thumbLp);
-
-                  infoTitle = new TextView(this);
-                  infoTitle.setTextColor(Color.WHITE);
-                  infoTitle.setTextSize(18);
-                  infoTitle.setTypeface(null, Typeface.BOLD);
-                  LinearLayout.LayoutParams titleLp = new LinearLayout.LayoutParams(-1, -2);
-                  titleLp.topMargin = dp(10);
-                  infoBox.addView(infoTitle, titleLp);
-
-                  infoCaption = new TextView(this);
-                  infoCaption.setTextColor(0xFFE0E0E0);
-                  infoCaption.setTextSize(14);
-                  LinearLayout.LayoutParams captionLp = new LinearLayout.LayoutParams(-1, -2);
-                  captionLp.topMargin = dp(5);
-                  infoBox.addView(infoCaption, captionLp);
-
-                  infoType = new TextView(this);
-                  infoType.setTextColor(0xFFF2B93B);
-                  infoType.setTextSize(13);
-                  LinearLayout.LayoutParams typeLp = new LinearLayout.LayoutParams(-1, -2);
-                  typeLp.topMargin = dp(7);
-                  infoBox.addView(infoType, typeLp);
-
-                  LinearLayout.LayoutParams infoLp = new LinearLayout.LayoutParams(-1, -2);
-                  infoLp.topMargin = dp(14);
-                  center.addView(infoBox, infoLp);
-
-                  btnDownload = new Button(this);
-                  btnDownload.setText("Download");
-                  btnDownload.setAllCaps(false);
-                  btnDownload.setTextSize(20);
-                  btnDownload.setTextColor(0xFFF2B93B);
-                  btnDownload.setBackground(pill(0x99333333, 12));
-                  btnDownload.setOnClickListener(v -> startDownload());
-                  LinearLayout.LayoutParams lpBtn = new LinearLayout.LayoutParams(dp(220), dp(54));
-                  lpBtn.topMargin = dp(10);
-                  lpBtn.gravity = Gravity.START;
-                  lpBtn.leftMargin = dp(30);
-                  center.addView(btnDownload, lpBtn);
-
-                  root.addView(center, new FrameLayout.LayoutParams(-1, -2, Gravity.CENTER));
                   setContentView(root);
-
-                  try {
-                      walls = getAssets().list("wallpapers");
-                      if (walls == null) walls = new String[0];
-                  } catch (Exception e) {
-                      walls = new String[0];
-                  }
-                  loadWallpaper();
-                  requestStoragePermission();
-              }
-
-              private static final int REQ_PERM = 100;
-              private static final int REQ_PICK = 101;
-              private boolean pendingPick = false;
-
-              private String[] perms() {
-                  if (Build.VERSION.SDK_INT >= 33) {
-                      return new String[]{Manifest.permission.READ_MEDIA_IMAGES};
-                  }
-                  return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
-              }
-
-              private boolean hasPerm() {
-                  return checkSelfPermission(perms()[0]) == PackageManager.PERMISSION_GRANTED;
-              }
-
-              private void requestStoragePermission() {
-                  if (!hasPerm()) requestPermissions(perms(), REQ_PERM);
-              }
-
-              private void pickWallpaper() {
-                  if (!hasPerm()) {
-                      pendingPick = true;
-                      requestPermissions(perms(), REQ_PERM);
-                      return;
-                  }
-                  openPicker();
-              }
-
-              private void openPicker() {
-                  Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                  i.setType("image/*");
-                  startActivityForResult(Intent.createChooser(i, "Pilih wallpaper"), REQ_PICK);
+                  applyWallpaper();
+                  buildUI();
               }
 
               @Override
-              public void onRequestPermissionsResult(int code, String[] p, int[] r) {
-                  super.onRequestPermissionsResult(code, p, r);
-                  if (code != REQ_PERM) return;
-                  boolean ok = r.length > 0 && r[0] == PackageManager.PERMISSION_GRANTED;
-                  toast(ok ? "Izin storage diberikan" : "Izin storage ditolak");
-                  // picker bawaan sistem tetap bisa dipakai walau izin ditolak
-                  if (pendingPick) openPicker();
-                  pendingPick = false;
+              protected void onResume() {
+                  super.onResume();
+                  startVideo();
+              }
+
+              @Override
+              protected void onPause() {
+                  super.onPause();
+                  stopVideo();
+              }
+
+              // ---------- wallpaper (foto / video) ----------
+              private void applyWallpaper() {
+                  stopVideo();
+                  wallImg.setImageDrawable(null);
+                  wallVideo.setVisibility(View.GONE);
+                  hasWall = false;
+
+                  String type = prefs.getString("wall_type", "");
+                  String path = prefs.getString("wall_path", null);
+                  if (path != null && new File(path).exists()) {
+                      if ("image".equals(type)) {
+                          try {
+                              BitmapFactory.Options bounds = new BitmapFactory.Options();
+                              bounds.inJustDecodeBounds = true;
+                              BitmapFactory.decodeFile(path, bounds);
+                              int sample = 1;
+                              while (bounds.outWidth / sample > 1600) sample *= 2;
+                              BitmapFactory.Options o = new BitmapFactory.Options();
+                              o.inSampleSize = sample;
+                              Bitmap bmp = BitmapFactory.decodeFile(path, o);
+                              if (bmp != null) {
+                                  wallImg.setImageBitmap(bmp);
+                                  hasWall = true;
+                              }
+                          } catch (Exception ignored) {
+                          }
+                      } else if ("video".equals(type)) {
+                          hasWall = true;
+                          wallVideo.setVisibility(View.VISIBLE);
+                          startVideo();
+                      }
+                  }
+                  applyColors();
+              }
+
+              private void startVideo() {
+                  stopVideo();
+                  String path = prefs.getString("wall_path", null);
+                  if (!"video".equals(prefs.getString("wall_type", "")) || path == null || videoSt == null) return;
+                  try {
+                      videoSurface = new Surface(videoSt);
+                      player = new MediaPlayer();
+                      player.setDataSource(path);
+                      player.setSurface(videoSurface);
+                      player.setLooping(true);
+                      player.setVolume(0f, 0f);
+                      player.setOnErrorListener((mp, what, extra) -> true);
+                      player.setOnVideoSizeChangedListener((mp, w, h) -> fitVideo(w, h));
+                      player.setOnPreparedListener(mp -> mp.start());
+                      player.prepareAsync();
+                  } catch (Exception e) {
+                      stopVideo();
+                  }
+              }
+
+              private void stopVideo() {
+                  if (player != null) {
+                      try {
+                          player.release();
+                      } catch (Exception ignored) {
+                      }
+                      player = null;
+                  }
+                  if (videoSurface != null) {
+                      videoSurface.release();
+                      videoSurface = null;
+                  }
+              }
+
+              private void fitVideo(int vw, int vh) {
+                  float w = wallVideo.getWidth();
+                  float h = wallVideo.getHeight();
+                  if (w == 0 || h == 0 || vw == 0 || vh == 0) return;
+                  float s = Math.max(w / vw, h / vh);
+                  Matrix m = new Matrix();
+                  m.setScale(vw * s / w, vh * s / h, w / 2f, h / 2f);
+                  wallVideo.setTransform(m);
+              }
+
+              private void pickWallpaper() {
+                  Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                  i.addCategory(Intent.CATEGORY_OPENABLE);
+                  i.setType("*/*");
+                  i.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*", "video/*"});
+                  startActivityForResult(i, REQ_PICK);
               }
 
               @Override
               protected void onActivityResult(int req, int res, Intent data) {
                   super.onActivityResult(req, res, data);
                   if (req == REQ_PICK && res == RESULT_OK && data != null && data.getData() != null) {
-                      saveAndShow(data.getData());
+                      saveWallpaper(data.getData());
                   }
               }
 
-              private void saveAndShow(Uri uri) {
-                  File out = new File(getFilesDir(), "wallpaper.img");
-                  try (InputStream is = getContentResolver().openInputStream(uri);
-                       OutputStream os = new FileOutputStream(out)) {
-                      byte[] buf = new byte[8192];
-                      int n;
-                      while ((n = is.read(buf)) > 0) os.write(buf, 0, n);
-                  } catch (Exception e) {
-                      toast("Gagal ganti wallpaper: " + e.getMessage());
-                      return;
-                  }
-                  loadWallpaper();
-                  toast("Wallpaper diganti");
-              }
-
-              private void loadWallpaper() {
-                  File f = new File(getFilesDir(), "wallpaper.img");
-                  if (f.exists()) {
-                      BitmapFactory.Options bounds = new BitmapFactory.Options();
-                      bounds.inJustDecodeBounds = true;
-                      BitmapFactory.decodeFile(f.getPath(), bounds);
-                      int sample = 1;
-                      while (bounds.outWidth / sample > 1600) sample *= 2;
-                      BitmapFactory.Options o = new BitmapFactory.Options();
-                      o.inSampleSize = sample;
-                      Bitmap b = BitmapFactory.decodeFile(f.getPath(), o);
-                      if (b != null) {
-                          bg.setImageBitmap(b);
-                          return;
+              private void saveWallpaper(final Uri uri) {
+                  toast("Menyimpan wallpaper...");
+                  new Thread(() -> {
+                      try {
+                          String mime = getContentResolver().getType(uri);
+                          if (mime == null) mime = "";
+                          String type = mime.startsWith("video") ? "video" : (mime.startsWith("image") ? "image" : null);
+                          if (type == null) {
+                              runOnUiThread(() -> toast("Pilih file foto atau video"));
+                              return;
+                          }
+                          String ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
+                          if (ext == null) ext = type.equals("video") ? "mp4" : "jpg";
+                          File out = new File(getFilesDir(), "wallpaper_" + System.currentTimeMillis() + "." + ext);
+                          try (InputStream is = getContentResolver().openInputStream(uri);
+                               OutputStream os = new FileOutputStream(out)) {
+                              byte[] buf = new byte[16384];
+                              int n;
+                              while ((n = is.read(buf)) > 0) os.write(buf, 0, n);
+                          }
+                          String old = prefs.getString("wall_path", null);
+                          prefs.edit().putString("wall_path", out.getPath()).putString("wall_type", type).apply();
+                          if (old != null) new File(old).delete();
+                          runOnUiThread(() -> {
+                              applyWallpaper();
+                              buildUI();
+                              toast("Wallpaper diganti");
+                          });
+                      } catch (Exception e) {
+                          final String m = e.getMessage();
+                          runOnUiThread(() -> toast("Gagal ganti wallpaper: " + m));
                       }
-                  }
-                  showWallpaper();
+                  }).start();
               }
 
-              private void nextWallpaper() {
-                  if (walls.length == 0) {
-                      toast("Belum ada wallpaper di folder wallpapers/");
-                      return;
-                  }
-                  idx = (idx + 1) % walls.length;
-                  showWallpaper();
+              private void clearWallpaper() {
+                  String old = prefs.getString("wall_path", null);
+                  if (old != null) new File(old).delete();
+                  prefs.edit().remove("wall_path").remove("wall_type").apply();
+                  applyWallpaper();
+                  buildUI();
+                  toast("Wallpaper dihapus");
               }
 
-              private void showWallpaper() {
-                  if (walls.length == 0) return;
-                  try (InputStream is = getAssets().open("wallpapers/" + walls[idx])) {
-                      BitmapFactory.Options o = new BitmapFactory.Options();
-                      o.inSampleSize = 2;
-                      Bitmap bmp = BitmapFactory.decodeStream(is, null, o);
-                      bg.setImageBitmap(bmp);
-                  } catch (Exception e) {
-                      toast("Gagal load wallpaper");
+              // ---------- UI utama ----------
+              private void buildUI() {
+                  if (ui != null) root.removeView(ui);
+                  applyColors();
+
+                  ui = new LinearLayout(this);
+                  ui.setOrientation(LinearLayout.VERTICAL);
+
+                  content = new FrameLayout(this);
+                  ui.addView(content, new LinearLayout.LayoutParams(-1, 0, 1f));
+
+                  navBox = new LinearLayout(this);
+                  navBox.setOrientation(LinearLayout.HORIZONTAL);
+                  navBox.setPadding(dp(6), dp(8), dp(6), dp(8));
+                  navBox.setBackground(shape(withAlpha(cCard, 0xEE), 26));
+                  ui.addView(navBox, lp(-1, -2, dp(14), dp(4), dp(14), dp(12)));
+
+                  root.addView(ui, new FrameLayout.LayoutParams(-1, -1));
+                  showTab(tab);
+              }
+
+              private void showTab(int t) {
+                  tab = t;
+                  content.removeAllViews();
+                  View v;
+                  if (t == 0) v = buildHome();
+                  else if (t == 1) v = buildHistory();
+                  else if (t == 2) v = buildProfile();
+                  else v = buildSettings();
+                  content.addView(v, new FrameLayout.LayoutParams(-1, -1));
+                  refreshNav();
+              }
+
+              private void refreshNav() {
+                  navBox.removeAllViews();
+                  int[] icons = {R.drawable.ic_home, R.drawable.ic_history, R.drawable.ic_profile, R.drawable.ic_settings};
+                  String[] labels = {"Home", "History", "Profile", "Settings"};
+                  for (int i = 0; i < 4; i++) {
+                      final int idx = i;
+                      LinearLayout item = new LinearLayout(this);
+                      item.setOrientation(LinearLayout.VERTICAL);
+                      item.setGravity(Gravity.CENTER);
+                      item.setPadding(0, dp(6), 0, dp(6));
+                      boolean sel = (i == tab);
+                      if (sel) item.setBackground(shape(withAlpha(cAcc, 0x66), 18));
+                      ImageView ic = icon(icons[i], 0, sel ? WHITE : 0xAAFFFFFF);
+                      TextView lb = tv(labels[i], 12, sel ? WHITE : 0xAAFFFFFF, sel);
+                      lb.setGravity(Gravity.CENTER);
+                      item.addView(ic, new LinearLayout.LayoutParams(dp(24), dp(24)));
+                      item.addView(lb);
+                      item.setOnClickListener(v -> showTab(idx));
+                      LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, -2, 1f);
+                      p.setMargins(dp(3), 0, dp(3), 0);
+                      navBox.addView(item, p);
                   }
+              }
+
+              // ---------- HOME ----------
+              private View platformIcon(int i) {
+                  int[] res = {R.drawable.ic_tiktok, R.drawable.ic_youtube, R.drawable.ic_instagram,
+                          R.drawable.ic_facebook, R.drawable.ic_twitter, R.drawable.ic_spotify};
+                  ImageView v = new ImageView(this);
+                  v.setImageResource(res[i]);
+                  v.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                  return v;
+              }
+
+              private View buildHome() {
+                  LinearLayout col = column();
+
+                  // header
+                  LinearLayout head = new LinearLayout(this);
+                  head.setGravity(Gravity.CENTER_VERTICAL);
+                  ImageView logo = icon(R.drawable.ic_download, 14, WHITE);
+                  logo.setBackground(grad(cAcc, cAcc2, 16));
+                  head.addView(logo, new LinearLayout.LayoutParams(dp(56), dp(56)));
+                  LinearLayout titles = new LinearLayout(this);
+                  titles.setOrientation(LinearLayout.VERTICAL);
+                  titles.addView(tv("ALL IN ONE", 22, WHITE, true));
+                  titles.addView(tv("DOWNLOADER", 17, 0xCCFFFFFF, true));
+                  LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(0, -2, 1f);
+                  tp.leftMargin = dp(12);
+                  head.addView(titles, tp);
+                  ImageView cp = icon(R.drawable.ic_paste, 10, WHITE);
+                  cp.setBackground(shape(withAlpha(cCard, 0xCC), 20));
+                  cp.setOnClickListener(v -> pasteClipboard());
+                  head.addView(cp, new LinearLayout.LayoutParams(dp(40), dp(40)));
+                  col.addView(head, new LinearLayout.LayoutParams(-1, -2));
+
+                  // kartu paste link
+                  LinearLayout card = new LinearLayout(this);
+                  card.setOrientation(LinearLayout.VERTICAL);
+                  card.setPadding(dp(16), dp(14), dp(16), dp(16));
+                  card.setBackground(grad(withAlpha(cAcc, 0xCC), withAlpha(cAcc2, 0xAA), 22));
+                  card.addView(tv("Paste link here", 18, WHITE, false));
+
+                  FrameLayout box = new FrameLayout(this);
+                  box.setBackground(shape(0x80000000, 20));
+                  input = new EditText(this);
+                  input.setHint("https://www.sociallink.com/@user/vid...");
+                  input.setHintTextColor(0x88FFFFFF);
+                  input.setTextColor(WHITE);
+                  input.setTextSize(14);
+                  input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+                  input.setSingleLine(true);
+                  input.setBackground(null);
+                  input.setPadding(dp(16), dp(12), dp(48), dp(12));
+                  input.setText(linkText);
+                  input.addTextChangedListener(new TextWatcher() {
+                      @Override
+                      public void beforeTextChanged(CharSequence s, int a, int b, int c) {
+                      }
+
+                      @Override
+                      public void onTextChanged(CharSequence s, int a, int b, int c) {
+                          linkText = s.toString();
+                      }
+
+                      @Override
+                      public void afterTextChanged(Editable s) {
+                      }
+                  });
+                  box.addView(input, new FrameLayout.LayoutParams(-1, -2));
+                  ImageView clr = icon(R.drawable.ic_close, 13, 0xCCFFFFFF);
+                  clr.setOnClickListener(v -> input.setText(""));
+                  box.addView(clr, new FrameLayout.LayoutParams(dp(44), dp(44), Gravity.END | Gravity.CENTER_VERTICAL));
+                  card.addView(box, lp(-1, -2, 0, dp(10), 0, 0));
+                  col.addView(card, lp(-1, -2, 0, dp(16), 0, 0));
+
+                  // grid platform
+                  String[] pn = {"TikTok", "YouTube", "Instagram", "Facebook", "Twitter", "Spotify"};
+                  LinearLayout grid = new LinearLayout(this);
+                  grid.setOrientation(LinearLayout.VERTICAL);
+                  for (int r = 0; r < 2; r++) {
+                      LinearLayout row = new LinearLayout(this);
+                      for (int c = 0; c < 3; c++) {
+                          final int i = r * 3 + c;
+                          LinearLayout tile = new LinearLayout(this);
+                          tile.setOrientation(LinearLayout.VERTICAL);
+                          tile.setGravity(Gravity.CENTER);
+                          tile.setBackground(shape(withAlpha(cCard, 0xCC), 18));
+                          tile.addView(platformIcon(i), new LinearLayout.LayoutParams(dp(44), dp(44)));
+                          TextView lb = tv(pn[i], 13, WHITE, false);
+                          lb.setGravity(Gravity.CENTER);
+                          tile.addView(lb, lp(-2, -2, 0, dp(6), 0, 0));
+                          tile.setOnClickListener(v -> toast(pn[i] + ": tempel link lalu tekan Download"));
+                          LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, dp(92), 1f);
+                          p.setMargins(dp(5), dp(5), dp(5), dp(5));
+                          row.addView(tile, p);
+                      }
+                      grid.addView(row, new LinearLayout.LayoutParams(-1, -2));
+                  }
+                  col.addView(grid, lp(-1, -2, 0, dp(12), 0, 0));
+
+                  // tombol download
+                  Button dl = button("Download", true);
+                  dl.setTextSize(18);
+                  dl.setOnClickListener(v -> startDownload());
+                  col.addView(dl, lp(-1, dp(54), 0, dp(14), 0, 0));
+
+                  col.addView(tv("Recent Downloads", 17, WHITE, true), lp(-2, -2, 0, dp(20), 0, dp(8)));
+                  recentBox = new LinearLayout(this);
+                  recentBox.setOrientation(LinearLayout.VERTICAL);
+                  col.addView(recentBox, new LinearLayout.LayoutParams(-1, -2));
+                  refreshRecent();
+
+                  return scroll(col);
+              }
+
+              private void refreshRecent() {
+                  if (recentBox == null || tab != 0) return;
+                  recentBox.removeAllViews();
+                  for (Task t : tasks) {
+                      recentBox.addView(makeRow(t.name, t.progress, t.progress < 0, t.label, t, null),
+                              lp(-1, -2, 0, 0, 0, dp(8)));
+                  }
+                  JSONArray h = history();
+                  int shown = 0;
+                  for (int i = h.length() - 1; i >= 0 && shown < 4; i--) {
+                      JSONObject o = h.optJSONObject(i);
+                      if (o == null) continue;
+                      recentBox.addView(makeRow(o.optString("title"), 100, false, "Selesai", null, o),
+                              lp(-1, -2, 0, 0, 0, dp(8)));
+                      shown++;
+                  }
+                  if (recentBox.getChildCount() == 0) {
+                      recentBox.addView(tv("Belum ada download", 14, 0x99FFFFFF, false));
+                  }
+              }
+
+              private View makeRow(String title, int progress, boolean indet, String right, Task t, final JSONObject item) {
+                  LinearLayout r = new LinearLayout(this);
+                  r.setGravity(Gravity.CENTER_VERTICAL);
+                  r.setPadding(dp(10), dp(10), dp(12), dp(10));
+                  r.setBackground(shape(withAlpha(cCard, 0xCC), 16));
+
+                  if (item != null) {
+                      ImageView ic = icon(R.drawable.ic_check, 10, WHITE);
+                      ic.setBackground(shape(withAlpha(cAcc, 0x77), 12));
+                      r.addView(ic, new LinearLayout.LayoutParams(dp(42), dp(42)));
+                  } else {
+                      FrameLayout holder = new FrameLayout(this);
+                      ImageView ic = icon(R.drawable.ic_download, 12, WHITE);
+                      ic.setBackground(shape(withAlpha(cAcc, 0x55), 21));
+                      holder.addView(ic, new FrameLayout.LayoutParams(-1, -1));
+                      holder.addView(new RainbowSpinner(this), new FrameLayout.LayoutParams(-1, -1));
+                      r.addView(holder, new LinearLayout.LayoutParams(dp(44), dp(44)));
+                  }
+
+                  LinearLayout mid = new LinearLayout(this);
+                  mid.setOrientation(LinearLayout.VERTICAL);
+                  LinearLayout line = new LinearLayout(this);
+                  TextView name = tv(title.isEmpty() ? "Download" : title, 14, WHITE, false);
+                  name.setSingleLine(true);
+                  name.setEllipsize(TextUtils.TruncateAt.END);
+                  line.addView(name, new LinearLayout.LayoutParams(0, -2, 1f));
+                  TextView pct = tv(right, 13, 0xCCFFFFFF, false);
+                  line.addView(pct, lp(-2, -2, dp(8), 0, 0, 0));
+                  mid.addView(line, new LinearLayout.LayoutParams(-1, -2));
+
+                  ProgressBar bar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+                  bar.setMax(100);
+                  bar.setIndeterminate(indet);
+                  if (!indet) bar.setProgress(progress);
+                  bar.setProgressTintList(ColorStateList.valueOf(cAcc));
+                  bar.setIndeterminateTintList(ColorStateList.valueOf(cAcc));
+                  bar.setProgressBackgroundTintList(ColorStateList.valueOf(0x44FFFFFF));
+                  mid.addView(bar, lp(-1, dp(6), 0, dp(7), 0, 0));
+
+                  LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(0, -2, 1f);
+                  mp.leftMargin = dp(12);
+                  r.addView(mid, mp);
+
+                  if (t != null) {
+                      t.bar = bar;
+                      t.pct = pct;
+                  }
+                  if (item != null) r.setOnClickListener(v -> openItem(item));
+                  return r;
               }
 
               private void pasteClipboard() {
                   ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                   if (cm != null && cm.hasPrimaryClip() && cm.getPrimaryClip().getItemCount() > 0) {
                       CharSequence t = cm.getPrimaryClip().getItemAt(0).coerceToText(this);
-                      input.setText(t);
+                      if (input != null) input.setText(t);
+                      else linkText = String.valueOf(t);
                   } else {
                       toast("Clipboard kosong");
                   }
               }
 
+              // ---------- HISTORY ----------
+              private View buildHistory() {
+                  LinearLayout col = column();
+                  col.addView(tv("History", 24, WHITE, true), lp(-2, -2, 0, 0, 0, dp(12)));
+                  JSONArray h = history();
+                  if (h.length() == 0) {
+                      col.addView(tv("Belum ada riwayat download", 14, 0x99FFFFFF, false));
+                  }
+                  SimpleDateFormat f = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
+                  for (int i = h.length() - 1; i >= 0; i--) {
+                      JSONObject o = h.optJSONObject(i);
+                      if (o == null) continue;
+                      String when = f.format(new Date(o.optLong("time")));
+                      col.addView(makeRow(o.optString("title"), 100, false, when, null, o), lp(-1, -2, 0, 0, 0, dp(8)));
+                  }
+                  return scroll(col);
+              }
+
+              private void openItem(JSONObject o) {
+                  try {
+                      Intent i = new Intent(Intent.ACTION_VIEW);
+                      i.setDataAndType(Uri.parse(o.optString("uri")), o.optString("mime"));
+                      i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                      startActivity(i);
+                  } catch (Exception e) {
+                      toast("File tidak bisa dibuka (mungkin sudah dihapus)");
+                  }
+              }
+
+              private synchronized JSONArray history() {
+                  try {
+                      return new JSONArray(prefs.getString("history", "[]"));
+                  } catch (Exception e) {
+                      return new JSONArray();
+                  }
+              }
+
+              private synchronized void addHistory(String title, Uri uri, String mime) {
+                  try {
+                      JSONArray old = history();
+                      JSONArray n = new JSONArray();
+                      int start = Math.max(0, old.length() - 99);
+                      for (int i = start; i < old.length(); i++) n.put(old.get(i));
+                      JSONObject o = new JSONObject();
+                      o.put("title", title);
+                      o.put("uri", uri.toString());
+                      o.put("mime", mime);
+                      o.put("time", System.currentTimeMillis());
+                      n.put(o);
+                      prefs.edit().putString("history", n.toString()).apply();
+                  } catch (Exception ignored) {
+                  }
+              }
+
+              // ---------- PROFILE ----------
+              private View buildProfile() {
+                  LinearLayout col = column();
+                  col.addView(tv("Profile", 24, WHITE, true), lp(-2, -2, 0, 0, 0, dp(12)));
+
+                  LinearLayout card = new LinearLayout(this);
+                  card.setOrientation(LinearLayout.VERTICAL);
+                  card.setPadding(dp(16), dp(16), dp(16), dp(16));
+                  card.setBackground(shape(withAlpha(cCard, 0xCC), 20));
+                  ImageView av = icon(R.drawable.ic_download, 15, WHITE);
+                  av.setBackground(grad(cAcc, cAcc2, 30));
+                  card.addView(av, new LinearLayout.LayoutParams(dp(60), dp(60)));
+                  card.addView(tv("All In One Downloader", 18, WHITE, true), lp(-2, -2, 0, dp(10), 0, 0));
+                  card.addView(tv("Versi 1.0", 13, 0xAAFFFFFF, false));
+                  card.addView(tv("Total download: " + history().length(), 15, WHITE, false), lp(-2, -2, 0, dp(12), 0, 0));
+                  card.addView(tv("Video: Movies/AllInOneDownloader\nFoto: Pictures/AllInOneDownloader\nAudio: Music/AllInOneDownloader",
+                          13, 0xCCFFFFFF, false), lp(-2, -2, 0, dp(8), 0, 0));
+                  col.addView(card, new LinearLayout.LayoutParams(-1, -2));
+
+                  Button clr = button("Hapus Riwayat", false);
+                  clr.setOnClickListener(v -> {
+                      prefs.edit().remove("history").apply();
+                      toast("Riwayat dihapus (file tetap ada di galeri)");
+                      showTab(2);
+                  });
+                  col.addView(clr, lp(-1, dp(50), 0, dp(14), 0, 0));
+                  return scroll(col);
+              }
+
+              // ---------- SETTINGS ----------
+              private View buildSettings() {
+                  LinearLayout col = column();
+                  col.addView(tv("Settings", 24, WHITE, true), lp(-2, -2, 0, 0, 0, dp(12)));
+
+                  col.addView(tv("Tema", 17, WHITE, true), lp(-2, -2, 0, 0, 0, dp(8)));
+                  LinearLayout grid = new LinearLayout(this);
+                  grid.setOrientation(LinearLayout.VERTICAL);
+                  int cur = prefs.getInt("theme", 0);
+                  for (int r = 0; r < 2; r++) {
+                      LinearLayout row = new LinearLayout(this);
+                      for (int c = 0; c < 3; c++) {
+                          final int idx = r * 3 + c;
+                          LinearLayout chip = new LinearLayout(this);
+                          chip.setOrientation(LinearLayout.VERTICAL);
+                          chip.setGravity(Gravity.CENTER);
+                          chip.setPadding(0, dp(10), 0, dp(10));
+                          if (idx == cur) chip.setBackground(shape(withAlpha(cAcc, 0x55), 16));
+                          else chip.setBackground(shape(withAlpha(cCard, 0xAA), 16));
+
+                          ImageView sw = icon(R.drawable.ic_check, 10, WHITE);
+                          if (idx != cur) sw.setImageDrawable(null);
+                          GradientDrawable g;
+                          if (idx < PRESETS.length) {
+                              g = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                                      new int[]{PRESETS[idx][2], PRESETS[idx][3]});
+                          } else {
+                              g = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
+                                      new int[]{0xFFFF0000, 0xFFFFFF00, 0xFF00FF00, 0xFF00FFFF, 0xFF0000FF, 0xFFFF00FF});
+                          }
+                          g.setShape(GradientDrawable.OVAL);
+                          sw.setBackground(g);
+                          chip.addView(sw, new LinearLayout.LayoutParams(dp(44), dp(44)));
+                          TextView lb = tv(THEME_NAMES[idx], 12, WHITE, false);
+                          lb.setGravity(Gravity.CENTER);
+                          chip.addView(lb, lp(-2, -2, 0, dp(6), 0, 0));
+                          chip.setOnClickListener(v -> {
+                              prefs.edit().putInt("theme", idx).apply();
+                              loadTheme();
+                              applyColors();
+                              buildUI();
+                          });
+                          LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, -2, 1f);
+                          p.setMargins(dp(4), dp(4), dp(4), dp(4));
+                          row.addView(chip, p);
+                      }
+                      grid.addView(row, new LinearLayout.LayoutParams(-1, -2));
+                  }
+                  col.addView(grid, new LinearLayout.LayoutParams(-1, -2));
+
+                  col.addView(tv("Warna Custom (geser lalu lepas)", 13, 0xCCFFFFFF, false), lp(-2, -2, 0, dp(12), 0, 0));
+                  final View prev = new View(this);
+                  int hue0 = prefs.getInt("hue", 270);
+                  prev.setBackground(grad(hsv(hue0, 0.8f, 0.9f), hsv(hue0 + 40, 0.8f, 0.95f), 10));
+                  col.addView(prev, lp(-1, dp(20), 0, dp(6), 0, 0));
+                  SeekBar sb = new SeekBar(this);
+                  sb.setMax(359);
+                  sb.setProgress(hue0);
+                  sb.setProgressTintList(ColorStateList.valueOf(cAcc));
+                  sb.setThumbTintList(ColorStateList.valueOf(cAcc));
+                  sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                      @Override
+                      public void onProgressChanged(SeekBar s, int p, boolean user) {
+                          prev.setBackground(grad(hsv(p, 0.8f, 0.9f), hsv(p + 40, 0.8f, 0.95f), 10));
+                      }
+
+                      @Override
+                      public void onStartTrackingTouch(SeekBar s) {
+                      }
+
+                      @Override
+                      public void onStopTrackingTouch(SeekBar s) {
+                          prefs.edit().putInt("hue", s.getProgress()).putInt("theme", 5).apply();
+                          loadTheme();
+                          applyColors();
+                          buildUI();
+                      }
+                  });
+                  col.addView(sb, lp(-1, -2, 0, dp(4), 0, 0));
+
+                  col.addView(tv("Wallpaper", 17, WHITE, true), lp(-2, -2, 0, dp(18), 0, dp(4)));
+                  col.addView(tv("Pilih foto atau video dari galeri. Video diputar berulang tanpa suara.", 13, 0xCCFFFFFF, false));
+                  Button pick = button("Pilih Foto / Video", true);
+                  pick.setOnClickListener(v -> pickWallpaper());
+                  col.addView(pick, lp(-1, dp(50), 0, dp(10), 0, 0));
+                  Button del = button("Hapus Wallpaper", false);
+                  del.setOnClickListener(v -> clearWallpaper());
+                  col.addView(del, lp(-1, dp(50), 0, dp(8), 0, 0));
+
+                  return scroll(col);
+              }
+
+              // ---------- DOWNLOAD ----------
               private void startDownload() {
-                  final String link = input.getText().toString().trim();
-                  if (link.isEmpty()) {
-                      toast("Masukkan link dulu");
+                  final String link = (input != null ? input.getText().toString() : linkText).trim();
+                  if (!link.startsWith("http")) {
+                      toast("Tempel link yang valid dulu");
                       return;
                   }
-                  btnDownload.setEnabled(false);
-                  btnDownload.setText("Loading...");
-                  new Thread(() -> {
-                      try {
-                          String[] res = fetchMedia(link); // url, ext, title, caption, thumbnail, type
-                          runOnUiThread(() -> {
-                              showDownloadInfo(res);
-                              enqueue(res[0], res[1]);
-                          });
-                      } catch (Exception e) {
-                          final String msg = e.getMessage();
-                          runOnUiThread(() -> toast("Gagal: " + msg));
-                      } finally {
-                          runOnUiThread(() -> {
-                              btnDownload.setEnabled(true);
-                              btnDownload.setText("Download");
-                          });
-                      }
-                  }).start();
+                  final Task t = new Task();
+                  t.name = "Mengambil info...";
+                  tasks.add(0, t);
+                  refreshRecent();
+                  new Thread(() -> runDownload(link, t)).start();
               }
 
-              private String[] fetchMedia(String link) throws Exception {
-                  URL u = new URL(API + URLEncoder.encode(link, "UTF-8"));
-                  HttpURLConnection c = (HttpURLConnection) u.openConnection();
-                  c.setConnectTimeout(20000);
-                  c.setReadTimeout(30000);
-                  c.setRequestProperty("User-Agent", "Mozilla/5.0");
-                  int code = c.getResponseCode();
-                  InputStream is = code >= 400 ? c.getErrorStream() : c.getInputStream();
-                  BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                  StringBuilder sb = new StringBuilder();
-                  String line;
-                  while ((line = br.readLine()) != null) sb.append(line);
-                  br.close();
-
-                  JSONObject json = new JSONObject(sb.toString());
-                  if (!json.optBoolean("status", false)) throw new Exception("API menolak link");
-                  JSONObject result = json.getJSONObject("result");
-                  JSONArray medias = result.optJSONArray("medias");
-                  if (medias == null || medias.length() == 0) throw new Exception("Media tidak ditemukan");
-
-                  JSONObject pick = null;
-                  // prioritas: hd_no_watermark > no_watermark > video pertama > media pertama
-                  for (int i = 0; i < medias.length(); i++) {
-                      JSONObject m = medias.getJSONObject(i);
-                      if ("video".equals(m.optString("type")) && "hd_no_watermark".equals(m.optString("quality"))) {
-                          pick = m;
-                          break;
-                      }
-                  }
-                  if (pick == null) {
-                      for (int i = 0; i < medias.length(); i++) {
-                          JSONObject m = medias.getJSONObject(i);
-                          if ("video".equals(m.optString("type")) && "no_watermark".equals(m.optString("quality"))) {
-                              pick = m;
-                              break;
+              private void updateTask(final Task t, final int pct, final String label) {
+                  runOnUiThread(() -> {
+                      t.progress = pct;
+                      t.label = label;
+                      if (t.bar != null) {
+                          if (pct < 0) {
+                              t.bar.setIndeterminate(true);
+                          } else {
+                              t.bar.setIndeterminate(false);
+                              t.bar.setProgress(pct);
                           }
                       }
-                  }
-                  if (pick == null) {
-                      for (int i = 0; i < medias.length(); i++) {
-                          JSONObject m = medias.getJSONObject(i);
-                          if ("video".equals(m.optString("type"))) {
-                              pick = m;
-                              break;
-                          }
-                      }
-                  }
-                  if (pick == null) pick = medias.getJSONObject(0);
-
-                  String title = result.optString("title", "").trim();
-                  String caption = result.optString("caption", "").trim();
-                  if (caption.isEmpty()) caption = result.optString("source", "").trim();
-                  String thumbnailUrl = result.optString("thumbnail", "").trim();
-                  String mediaType = result.optString("type", "single").trim();
-
-                  // Field author/creator sengaja tidak ditampilkan.
-                  return new String[]{
-                          pick.getString("url"),
-                          pick.optString("extension", "mp4"),
-                          title,
-                          caption,
-                          thumbnailUrl,
-                          mediaType
-                  };
+                      if (t.pct != null) t.pct.setText(label);
+                  });
               }
 
-              private void showDownloadInfo(String[] data) {
-                  infoBox.setVisibility(View.VISIBLE);
-                  infoTitle.setText(data[2].isEmpty() ? "Tanpa Title" : data[2]);
-                  infoCaption.setText(data[3].isEmpty() ? "Caption tidak tersedia" : data[3]);
-                  infoType.setText("Media: " + data[5] + " • Format: " + data[1].toUpperCase());
-                  infoThumbnail.setImageDrawable(null);
-
-                  if (!data[4].isEmpty()) {
-                      new Thread(() -> {
-                          HttpURLConnection connection = null;
-                          try {
-                              connection = (HttpURLConnection) new URL(data[4]).openConnection();
-                              connection.setConnectTimeout(15000);
-                              connection.setReadTimeout(15000);
-                              connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-                              Bitmap bitmap;
-                              try (InputStream stream = connection.getInputStream()) {
-                                  bitmap = BitmapFactory.decodeStream(stream);
-                              }
-                              if (bitmap != null) {
-                                  runOnUiThread(() -> infoThumbnail.setImageBitmap(bitmap));
-                              }
-                          } catch (Exception ignored) {
-                          } finally {
-                              if (connection != null) connection.disconnect();
-                          }
-                      }).start();
-                  }
-              }
-
-              private void enqueue(String url, String ext) {
+              private void runDownload(String link, final Task t) {
                   try {
-                      DownloadManager.Request r = new DownloadManager.Request(Uri.parse(url));
-                      r.setTitle("Download");
-                      r.addRequestHeader("User-Agent", "Mozilla/5.0");
-                      r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                      r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,
-                              "download_" + System.currentTimeMillis() + "." + ext);
-                      ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(r);
-                      toast("Download dimulai, cek notifikasi");
+                      JSONObject result = fetchInfo(link);
+                      String title = result.optString("title", "").replaceAll("\\s+", " ").trim();
+                      if (title.isEmpty()) title = result.optString("caption", "").replaceAll("\\s+", " ").trim();
+                      if (title.isEmpty()) title = "download";
+                      final String shown = title.length() > 60 ? title.substring(0, 60) : title;
+                      t.name = shown;
+                      runOnUiThread(() -> refreshRecent());
+
+                      Plan plan = pickMedias(result);
+                      String base = safeName(title);
+                      Exception last = null;
+
+                      if (plan.all) {
+                          int n = plan.list.size();
+                          int saved = 0;
+                          for (int i = 0; i < n; i++) {
+                              try {
+                                  download(plan.list.get(i), shown, base + "_" + (i + 1), link, t, i, n);
+                                  saved++;
+                              } catch (Exception e) {
+                                  last = e;
+                              }
+                          }
+                          if (saved == 0) throw last != null ? last : new Exception("Gagal download");
+                      } else {
+                          Uri ok = null;
+                          int tries = Math.min(5, plan.list.size());
+                          for (int i = 0; i < tries && ok == null; i++) {
+                              try {
+                                  ok = download(plan.list.get(i), shown, base, link, t, 0, 1);
+                              } catch (Exception e) {
+                                  last = e;
+                                  updateTask(t, -1, "Coba server lain...");
+                              }
+                          }
+                          if (ok == null) throw last != null ? last : new Exception("Gagal download");
+                      }
+
+                      runOnUiThread(() -> {
+                          tasks.remove(t);
+                          refreshRecent();
+                          toast("Tersimpan di galeri (folder AllInOneDownloader)");
+                      });
                   } catch (Exception e) {
-                      toast("Gagal download: " + e.getMessage());
+                      final String msg = e.getMessage() == null ? e.toString() : e.getMessage();
+                      runOnUiThread(() -> {
+                          tasks.remove(t);
+                          refreshRecent();
+                          toast("Gagal: " + msg);
+                      });
                   }
               }
 
-              private void toast(String s) {
-                  Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+              private String safeName(String s) {
+                  String n = s.replaceAll("[^A-Za-z0-9 _-]", "").trim().replace(' ', '_');
+                  if (n.length() > 40) n = n.substring(0, 40);
+                  return n.isEmpty() ? "download" : n;
+              }
+
+              private String readAll(InputStream is) throws Exception {
+                  try (InputStream in = is) {
+                      ByteArrayOutputStream bo = new ByteArrayOutputStream();
+                      byte[] buf = new byte[8192];
+                      int n;
+                      while ((n = in.read(buf)) > 0) bo.write(buf, 0, n);
+                      return bo.toString("UTF-8");
+                  }
+              }
+
+              private JSONObject fetchInfo(String link) throws Exception {
+                  Exception last = null;
+                  for (int attempt = 0; attempt < 2; attempt++) {
+                      try {
+                          HttpURLConnection c = (HttpURLConnection) new URL(API + URLEncoder.encode(link, "UTF-8")).openConnection();
+                          c.setConnectTimeout(25000);
+                          c.setReadTimeout(60000);
+                          c.setRequestProperty("User-Agent", UA);
+                          c.setRequestProperty("Accept", "application/json");
+                          int code = c.getResponseCode();
+                          InputStream is = code >= 400 ? c.getErrorStream() : c.getInputStream();
+                          String body = is == null ? "" : readAll(is);
+                          c.disconnect();
+                          JSONObject json = new JSONObject(body);
+                          if (!json.optBoolean("status", false)) {
+                              throw new Exception(json.optString("message", "API menolak link"));
+                          }
+                          JSONObject result = json.optJSONObject("result");
+                          if (result == null) throw new Exception("Respon API kosong");
+                          return result;
+                      } catch (Exception e) {
+                          last = e;
+                          try {
+                              Thread.sleep(800);
+                          } catch (InterruptedException ignored) {
+                          }
+                      }
+                  }
+                  throw last;
+              }
+
+              private int score(JSONObject m) {
+                  String q = m.optString("quality", "").toLowerCase(Locale.ROOT);
+                  if (q.equals("hd_no_watermark")) return 0;
+                  if (q.equals("no_watermark")) return 1;
+                  if (q.contains("hd")) return 2;
+                  return 3;
+              }
+
+              private Plan pickMedias(JSONObject result) throws Exception {
+                  ArrayList<JSONObject> vids = new ArrayList<>();
+                  ArrayList<JSONObject> auds = new ArrayList<>();
+                  ArrayList<JSONObject> imgs = new ArrayList<>();
+                  ArrayList<JSONObject> others = new ArrayList<>();
+
+                  JSONArray medias = result.optJSONArray("medias");
+                  if (medias != null) {
+                      for (int i = 0; i < medias.length(); i++) {
+                          JSONObject m = medias.optJSONObject(i);
+                          if (m == null || m.optString("url", "").isEmpty()) continue;
+                          String type = m.optString("type", "").toLowerCase(Locale.ROOT);
+                          if (type.contains("video")) vids.add(m);
+                          else if (type.contains("audio")) auds.add(m);
+                          else if (type.contains("image")) imgs.add(m);
+                          else others.add(m);
+                      }
+                  }
+                  if (vids.isEmpty() && auds.isEmpty() && imgs.isEmpty() && others.isEmpty()) {
+                      String u = result.optString("url", "");
+                      if (u.isEmpty()) throw new Exception("Media tidak ditemukan");
+                      JSONObject m = new JSONObject();
+                      m.put("url", u);
+                      others.add(m);
+                  }
+                  Collections.sort(vids, (a, b) -> Integer.compare(score(a), score(b)));
+
+                  Plan p = new Plan();
+                  if (!vids.isEmpty()) p.list = vids;
+                  else if (!auds.isEmpty()) p.list = auds;
+                  else if (!imgs.isEmpty()) {
+                      p.list = imgs;
+                      p.all = true;
+                  } else p.list = others;
+                  return p;
+              }
+
+              private String originOf(String url) {
+                  try {
+                      URL u = new URL(url);
+                      return u.getProtocol() + "://" + u.getHost() + "/";
+                  } catch (Exception e) {
+                      return null;
+                  }
+              }
+
+              // buka koneksi + ikuti redirect manual (termasuk http -> https)
+              private HttpURLConnection open(String url, String ref) throws Exception {
+                  String cur = url;
+                  for (int i = 0; i < 8; i++) {
+                      HttpURLConnection c = (HttpURLConnection) new URL(cur).openConnection();
+                      c.setInstanceFollowRedirects(false);
+                      c.setConnectTimeout(20000);
+                      c.setReadTimeout(30000);
+                      c.setRequestProperty("User-Agent", UA);
+                      c.setRequestProperty("Accept", "*/*");
+                      c.setRequestProperty("Accept-Encoding", "identity");
+                      if (ref != null) c.setRequestProperty("Referer", ref);
+                      int code = c.getResponseCode();
+                      if (code >= 300 && code < 400) {
+                          String loc = c.getHeaderField("Location");
+                          c.disconnect();
+                          if (loc == null) throw new Exception("Redirect tidak valid");
+                          cur = new URL(new URL(cur), loc).toString();
+                          continue;
+                      }
+                      if (code >= 400) {
+                          c.disconnect();
+                          throw new Exception("Server menolak (HTTP " + code + ")");
+                      }
+                      return c;
+                  }
+                  throw new Exception("Terlalu banyak redirect");
+              }
+
+              private String pickExt(String apiExt, String ctype, String url, String type) {
+                  String[] known = {"mp4", "mp3", "m4a", "jpg", "jpeg", "png", "webp", "gif", "webm", "mkv", "mov", "aac", "wav", "ogg"};
+                  for (String k : known) if (k.equals(apiExt)) return apiExt;
+                  if (ctype != null && !ctype.equals("application/octet-stream")) {
+                      String e = MimeTypeMap.getSingleton().getExtensionFromMimeType(ctype);
+                      if (e != null) return e;
+                  }
+                  try {
+                      String path = new URL(url).getPath();
+                      int dot = path.lastIndexOf('.');
+                      if (dot >= 0 && path.length() - dot <= 5) {
+                          String e = path.substring(dot + 1).toLowerCase(Locale.ROOT);
+                          for (String k : known) if (k.equals(e)) return e;
+                      }
+                  } catch (Exception ignored) {
+                  }
+                  String t = type.toLowerCase(Locale.ROOT);
+                  if (t.contains("audio")) return "mp3";
+                  if (t.contains("image")) return "jpg";
+                  return "mp4";
+              }
+
+              // download langsung dari aplikasi, simpan langsung ke galeri (MediaStore)
+              private Uri download(JSONObject m, String title, String base, String link, Task t, int idx, int count) throws Exception {
+                  String url = m.getString("url");
+                  String apiExt = m.optString("extension", "").toLowerCase(Locale.ROOT).replace(".", "");
+                  String type = m.optString("type", "video");
+
+                  HttpURLConnection c = null;
+                  Exception err = null;
+                  String[] refs = {null, originOf(link), originOf(url)};
+                  for (String ref : refs) {
+                      try {
+                          c = open(url, ref);
+                          err = null;
+                          break;
+                      } catch (Exception e) {
+                          err = e;
+                          c = null;
+                      }
+                  }
+                  if (c == null) throw err != null ? err : new Exception("Koneksi gagal");
+
+                  String ctype = c.getContentType();
+                  if (ctype != null) ctype = ctype.split(";")[0].trim().toLowerCase(Locale.ROOT);
+                  if (ctype != null && (ctype.contains("text/html") || ctype.contains("json"))) {
+                      c.disconnect();
+                      throw new Exception("Link media kadaluarsa");
+                  }
+
+                  String ext = pickExt(apiExt, ctype, url, type);
+                  String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+                  if (mime == null) {
+                      String tl = type.toLowerCase(Locale.ROOT);
+                      mime = tl.contains("audio") ? "audio/mpeg" : (tl.contains("image") ? "image/jpeg" : "video/mp4");
+                  }
+
+                  Uri collection;
+                  String rel;
+                  if (mime.startsWith("video")) {
+                      collection = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                      rel = Environment.DIRECTORY_MOVIES + "/AllInOneDownloader";
+                  } else if (mime.startsWith("audio")) {
+                      collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                      rel = Environment.DIRECTORY_MUSIC + "/AllInOneDownloader";
+                  } else if (mime.startsWith("image")) {
+                      collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                      rel = Environment.DIRECTORY_PICTURES + "/AllInOneDownloader";
+                  } else {
+                      collection = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+                      rel = Environment.DIRECTORY_DOWNLOADS + "/AllInOneDownloader";
+                  }
+
+                  ContentResolver cr = getContentResolver();
+                  ContentValues v = new ContentValues();
+                  v.put(MediaStore.MediaColumns.DISPLAY_NAME, base + "_" + System.currentTimeMillis() + "." + ext);
+                  v.put(MediaStore.MediaColumns.MIME_TYPE, mime);
+                  v.put(MediaStore.MediaColumns.RELATIVE_PATH, rel);
+                  v.put(MediaStore.MediaColumns.IS_PENDING, 1);
+                  Uri out = cr.insert(collection, v);
+                  if (out == null) {
+                      c.disconnect();
+                      throw new Exception("Gagal membuat file di penyimpanan");
+                  }
+
+                  long len = c.getContentLengthLong();
+                  long got = 0;
+                  long lastTick = 0;
+                  try (InputStream is = c.getInputStream(); OutputStream os = cr.openOutputStream(out)) {
+                      byte[] buf = new byte[32768];
+                      int n;
+                      while ((n = is.read(buf)) > 0) {
+                          os.write(buf, 0, n);
+                          got += n;
+                          long now = System.currentTimeMillis();
+                          if (now - lastTick > 250) {
+                              lastTick = now;
+                              if (len > 0) {
+                                  int overall = (int) ((idx * 100L + (got * 100L / len)) / count);
+                                  updateTask(t, overall, overall + "%");
+                              } else {
+                                  updateTask(t, -1, String.format(Locale.US, "%.1f MB", got / 1048576f));
+                              }
+                          }
+                      }
+                      os.flush();
+                  } catch (Exception e) {
+                      cr.delete(out, null, null);
+                      throw e;
+                  } finally {
+                      c.disconnect();
+                  }
+
+                  if (got < 1024) {
+                      cr.delete(out, null, null);
+                      throw new Exception("File kosong / tidak valid");
+                  }
+                  ContentValues done = new ContentValues();
+                  done.put(MediaStore.MediaColumns.IS_PENDING, 0);
+                  cr.update(out, done, null, null);
+
+                  addHistory(title, out, mime);
+                  return out;
               }
           }
           EOF
@@ -617,7 +1496,7 @@ jobs:
           if command -v magick >/dev/null 2>&1; then IM=magick; else IM=convert; fi
           if [ ! -f icon.png ]; then
             echo "icon.png tidak ditemukan, pakai icon default"
-            $IM -size 512x512 xc:'#F2B93B' icon.png
+            $IM -size 512x512 xc:'#8E2DE2' icon.png
           fi
           for entry in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
             dir="app/src/main/res/mipmap-${entry%%:*}"
