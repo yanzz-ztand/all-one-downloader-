@@ -91,7 +91,7 @@ jobs:
               <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
               <application
-                  android:label="All Downloader"
+                  android:appname="AIOD"
                   android:allowBackup="true"
                   android:usesCleartextTraffic="true"
                   android:icon="@mipmap/ic_launcher"
@@ -273,6 +273,14 @@ jobs:
 
           mkdir -p app/src/main/res/mipmap-anydpi-v26
 
+          cat > app/src/main/res/drawable/ic_info.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM13 17h-2v-6h2v6zM13 9h-2V7h2v2z"/>
+          </vector>
+          EOF
+
           cat > app/src/main/res/drawable/ic_volume_on.xml <<'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <vector xmlns:android="http://schemas.android.com/apk/res/android"
@@ -395,6 +403,323 @@ jobs:
           EOF
           done
 
+          mkdir -p app/src/main/res/drawable-nodpi
+          base64 -d > app/src/main/res/drawable-nodpi/profile_photo.jpg <<'EOF'
+          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
+          QcG8Sm04+/R3SRNjGgV0r8rVGPZQlGc2Tdcr/9k=
+          EOF
+
           cat > app/src/main/java/com/all/downloader/MainActivity.java <<'EOF'
           package com.all.downloader;
 
@@ -405,6 +730,8 @@ jobs:
           import android.graphics.LinearGradient;
           import android.graphics.Path;
           import android.graphics.Shader;
+          import android.graphics.BitmapShader;
+          import android.graphics.BlurMaskFilter;
           import android.graphics.drawable.Drawable;
           import android.graphics.drawable.LayerDrawable;
           import android.view.MotionEvent;
@@ -437,6 +764,7 @@ jobs:
           import android.provider.MediaStore;
           import android.text.Editable;
           import android.text.InputType;
+          import android.text.InputFilter;
           import android.text.TextUtils;
           import android.text.TextWatcher;
           import android.view.Gravity;
@@ -477,6 +805,7 @@ jobs:
               private static final String API = "https://api.ikyyxd.my.id/download/all-in-one?url=";
               private static final String UA = "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36";
               private static final int REQ_PICK = 101;
+              private static final int REQ_PROFILE = 102;
               private static final int WHITE = Color.WHITE;
               private static final String APP_VERSION = "1.0";
 
@@ -632,6 +961,65 @@ jobs:
                       cv.drawArc(r, 0, 300, false, p);
                       cv.restore();
                       angle = (angle + 7f) % 360f;
+                      postInvalidateOnAnimation();
+                  }
+              }
+
+              // foto profil dengan bingkai RGB (ungu - kuning - hijau) yang berputar + glow
+              static class RgbAvatar extends View {
+                  private final Paint ring = new Paint(Paint.ANTI_ALIAS_FLAG);
+                  private final Paint glow = new Paint(Paint.ANTI_ALIAS_FLAG);
+                  private final Paint img = new Paint(Paint.ANTI_ALIAS_FLAG);
+                  private final Matrix m = new Matrix();
+                  private final Bitmap bmp;
+                  private float cx, cy, ringR, photoR;
+                  private float angle = 0f;
+
+                  RgbAvatar(Context c, Bitmap b) {
+                      super(c);
+                      bmp = b;
+                      setLayerType(LAYER_TYPE_SOFTWARE, null);
+                      ring.setStyle(Paint.Style.STROKE);
+                      glow.setStyle(Paint.Style.STROKE);
+                  }
+
+                  @Override
+                  protected void onSizeChanged(int w, int h, int ow, int oh) {
+                      super.onSizeChanged(w, h, ow, oh);
+                      float size = Math.min(w, h);
+                      float sw = size * 0.06f;
+                      cx = w / 2f;
+                      cy = h / 2f;
+                      ringR = size / 2f - sw * 1.8f;
+                      photoR = ringR - sw * 0.9f;
+                      ring.setStrokeWidth(sw);
+                      glow.setStrokeWidth(sw * 1.6f);
+                      glow.setMaskFilter(new BlurMaskFilter(Math.max(1f, sw), BlurMaskFilter.Blur.NORMAL));
+                      SweepGradient sg = new SweepGradient(cx, cy,
+                              new int[]{0xFFA855F7, 0xFFFACC15, 0xFF22C55E, 0xFFA855F7}, null);
+                      ring.setShader(sg);
+                      glow.setShader(sg);
+                      glow.setAlpha(150);
+                      if (bmp != null) {
+                          BitmapShader bs = new BitmapShader(bmp, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+                          float sc = Math.max(2f * photoR / bmp.getWidth(), 2f * photoR / bmp.getHeight());
+                          m.reset();
+                          m.setScale(sc, sc);
+                          m.postTranslate(cx - bmp.getWidth() * sc / 2f, cy - bmp.getHeight() * sc / 2f);
+                          bs.setLocalMatrix(m);
+                          img.setShader(bs);
+                      }
+                  }
+
+                  @Override
+                  protected void onDraw(Canvas cv) {
+                      if (bmp != null) cv.drawCircle(cx, cy, photoR, img);
+                      cv.save();
+                      cv.rotate(angle, cx, cy);
+                      cv.drawCircle(cx, cy, ringR, glow);
+                      cv.drawCircle(cx, cy, ringR, ring);
+                      cv.restore();
+                      angle = (angle + 2.5f) % 360f;
                       postInvalidateOnAnimation();
                   }
               }
@@ -798,6 +1186,12 @@ jobs:
                   return String.format(Locale.US, "%.1f MB", got / 1048576f);
               }
 
+              private void applyWallAlpha() {
+                  float a = prefs.getInt("wall_alpha", 100) / 100f;
+                  wallImg.setAlpha(a);
+                  wallVideo.setAlpha(a);
+              }
+
               private boolean isMuted() {
                   return prefs.getBoolean("wall_mute", true);
               }
@@ -936,6 +1330,7 @@ jobs:
                           startVideo();
                       }
                   }
+                  applyWallAlpha();
                   applyColors();
               }
 
@@ -997,6 +1392,8 @@ jobs:
                   super.onActivityResult(req, res, data);
                   if (req == REQ_PICK && res == RESULT_OK && data != null && data.getData() != null) {
                       saveWallpaper(data.getData());
+                  } else if (req == REQ_PROFILE && res == RESULT_OK && data != null && data.getData() != null) {
+                      saveProfilePhoto(data.getData());
                   }
               }
 
@@ -1073,6 +1470,7 @@ jobs:
                   if (t == 0) v = buildHome();
                   else if (t == 1) v = buildHistory();
                   else if (t == 2) v = buildProfile();
+                  else if (t == 3) v = buildAbout();
                   else v = buildSettings();
                   content.addView(v, new FrameLayout.LayoutParams(-1, -1));
                   animateIn(v);
@@ -1081,9 +1479,9 @@ jobs:
 
               private void refreshNav() {
                   navBox.removeAllViews();
-                  int[] icons = {R.drawable.ic_home, R.drawable.ic_history, R.drawable.ic_profile, R.drawable.ic_settings};
-                  String[] labels = {"Home", "History", "Profile", "Settings"};
-                  for (int i = 0; i < 4; i++) {
+                  int[] icons = {R.drawable.ic_home, R.drawable.ic_history, R.drawable.ic_profile, R.drawable.ic_info, R.drawable.ic_settings};
+                  String[] labels = {"Home", "History", "Profile", "About", "Settings"};
+                  for (int i = 0; i < icons.length; i++) {
                       final int idx = i;
                       LinearLayout item = new LinearLayout(this);
                       item.setOrientation(LinearLayout.VERTICAL);
@@ -1098,7 +1496,7 @@ jobs:
                                   .setInterpolator(new OvershootInterpolator(2.5f)).start();
                       }
                       ImageView ic = icon(icons[i], 0, sel ? WHITE : 0xAAFFFFFF);
-                      TextView lb = tv(labels[i], 12, sel ? WHITE : 0xAAFFFFFF, sel);
+                      TextView lb = tv(labels[i], 11, sel ? WHITE : 0xAAFFFFFF, sel);
                       lb.setGravity(Gravity.CENTER);
                       item.addView(ic, new LinearLayout.LayoutParams(dp(24), dp(24)));
                       item.addView(lb);
@@ -1286,7 +1684,7 @@ jobs:
                   for (int i = h.length() - 1; i >= 0 && shown < 4; i--) {
                       JSONObject o = h.optJSONObject(i);
                       if (o == null) continue;
-                      recentBox.addView(historyRow(o, false), lp(-1, -2, 0, 0, 0, dp(8)));
+                      recentBox.addView(historyRow(o, false, false), lp(-1, -2, 0, 0, 0, dp(8)));
                       shown++;
                   }
                   if (recentBox.getChildCount() == 0) {
@@ -1345,7 +1743,7 @@ jobs:
               }
 
               // baris riwayat: caption (judul) + label Success + ukuran MB
-              private View historyRow(final JSONObject o, boolean withDate) {
+              private View historyRow(final JSONObject o, boolean withDate, boolean deletable) {
                   LinearLayout r = new LinearLayout(this);
                   r.setGravity(Gravity.CENTER_VERTICAL);
                   r.setPadding(dp(12), dp(12), dp(14), dp(12));
@@ -1386,6 +1784,13 @@ jobs:
                   if (size > 0) {
                       r.addView(tv(String.format(Locale.US, "%.1f MB", size / 1048576f), 16, WHITE, true),
                               lp(-2, -2, dp(10), 0, 0, 0));
+                  }
+                  if (deletable) {
+                      ImageView dl = icon(R.drawable.ic_delete, 8, WHITE);
+                      dl.setBackground(shape(0x33FFFFFF, 18));
+                      dl.setOnClickListener(v -> deleteHistoryItem(o, r));
+                      pressable(dl);
+                      r.addView(dl, lp(dp(36), dp(36), dp(10), 0, 0, 0));
                   }
                   r.setOnClickListener(v -> openItem(o));
                   pressable(r);
@@ -1430,9 +1835,40 @@ jobs:
                   for (int i = h.length() - 1; i >= 0; i--) {
                       JSONObject o = h.optJSONObject(i);
                       if (o == null) continue;
-                      col.addView(historyRow(o, true), lp(-1, -2, 0, 0, 0, dp(8)));
+                      col.addView(historyRow(o, true, true), lp(-1, -2, 0, 0, 0, dp(8)));
                   }
                   return scroll(col);
+              }
+
+              private void deleteHistoryItem(JSONObject o, final View row) {
+                  final long time = o.optLong("time");
+                  final String uri = o.optString("uri");
+                  row.animate().alpha(0f).translationX(dp(80)).setStartDelay(0).setDuration(220)
+                          .setInterpolator(new DecelerateInterpolator())
+                          .withEndAction(() -> {
+                              removeHistory(time, uri);
+                              if (history().length() == 0) {
+                                  showTab(1);
+                                  return;
+                              }
+                              ViewGroup parent = (ViewGroup) row.getParent();
+                              if (parent != null) parent.removeView(row);
+                              toast("Dihapus dari history");
+                          }).start();
+              }
+
+              private synchronized void removeHistory(long time, String uri) {
+                  try {
+                      JSONArray old = history();
+                      JSONArray n = new JSONArray();
+                      for (int i = 0; i < old.length(); i++) {
+                          JSONObject x = old.optJSONObject(i);
+                          if (x != null && x.optLong("time") == time && x.optString("uri").equals(uri)) continue;
+                          n.put(old.get(i));
+                      }
+                      prefs.edit().putString("history", n.toString()).apply();
+                  } catch (Exception ignored) {
+                  }
               }
 
               private void confirmClear() {
@@ -1485,7 +1921,7 @@ jobs:
                   }
               }
 
-              // ---------- ABOUT + PROFILE ----------
+              // ---------- PROFILE (foto + nickname bisa diganti) ----------
               private View infoRow(String k, String v) {
                   LinearLayout r = new LinearLayout(this);
                   r.setGravity(Gravity.CENTER_VERTICAL);
@@ -1502,35 +1938,174 @@ jobs:
                   return d;
               }
 
+              private String profileName() {
+                  return prefs.getString("prof_name", "Yenaa San");
+              }
+
+              private Bitmap loadProfileBitmap() {
+                  String p = prefs.getString("prof_path", null);
+                  try {
+                      if (p != null && new File(p).exists()) {
+                          Bitmap b = BitmapFactory.decodeFile(p);
+                          if (b != null) return b;
+                      }
+                      return BitmapFactory.decodeResource(getResources(), R.drawable.profile_photo);
+                  } catch (Exception e) {
+                      return null;
+                  }
+              }
+
+              private void pickProfilePhoto() {
+                  Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                  i.addCategory(Intent.CATEGORY_OPENABLE);
+                  i.setType("image/*");
+                  startActivityForResult(i, REQ_PROFILE);
+              }
+
+              private void saveProfilePhoto(final Uri uri) {
+                  toast("Menyimpan foto profil...");
+                  new Thread(() -> {
+                      try {
+                          BitmapFactory.Options b = new BitmapFactory.Options();
+                          b.inJustDecodeBounds = true;
+                          try (InputStream is = getContentResolver().openInputStream(uri)) {
+                              BitmapFactory.decodeStream(is, null, b);
+                          }
+                          int sample = 1;
+                          while (Math.min(b.outWidth, b.outHeight) / sample > 1024) sample *= 2;
+                          BitmapFactory.Options o = new BitmapFactory.Options();
+                          o.inSampleSize = sample;
+                          Bitmap bmp;
+                          try (InputStream is = getContentResolver().openInputStream(uri)) {
+                              bmp = BitmapFactory.decodeStream(is, null, o);
+                          }
+                          if (bmp == null) throw new Exception("Gambar tidak valid");
+                          int orient = 1;
+                          try (InputStream is = getContentResolver().openInputStream(uri)) {
+                              orient = new android.media.ExifInterface(is)
+                                      .getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION, 1);
+                          } catch (Exception ignored) {
+                          }
+                          Matrix rot = new Matrix();
+                          if (orient == 6) rot.postRotate(90);
+                          else if (orient == 3) rot.postRotate(180);
+                          else if (orient == 8) rot.postRotate(270);
+                          int side = Math.min(bmp.getWidth(), bmp.getHeight());
+                          Bitmap sq = Bitmap.createBitmap(bmp, (bmp.getWidth() - side) / 2, (bmp.getHeight() - side) / 2,
+                                  side, side, rot, true);
+                          Bitmap fin = Bitmap.createScaledBitmap(sq, 512, 512, true);
+                          File f = new File(getFilesDir(), "profile_" + System.currentTimeMillis() + ".jpg");
+                          try (OutputStream os = new FileOutputStream(f)) {
+                              fin.compress(Bitmap.CompressFormat.JPEG, 90, os);
+                          }
+                          String old = prefs.getString("prof_path", null);
+                          prefs.edit().putString("prof_path", f.getPath()).apply();
+                          if (old != null) new File(old).delete();
+                          runOnUiThread(() -> {
+                              toast("Foto profil diganti");
+                              if (tab == 2) showTab(2);
+                          });
+                      } catch (Exception e) {
+                          final String msg = e.getMessage();
+                          runOnUiThread(() -> toast("Gagal ganti foto: " + msg));
+                      }
+                  }).start();
+              }
+
+              private void editNickname() {
+                  final EditText et = new EditText(this);
+                  et.setText(profileName());
+                  et.setSingleLine(true);
+                  et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(24)});
+                  et.setSelection(et.getText().length());
+                  LinearLayout box = new LinearLayout(this);
+                  box.setPadding(dp(20), dp(8), dp(20), 0);
+                  box.addView(et, new LinearLayout.LayoutParams(-1, -2));
+                  new android.app.AlertDialog.Builder(this)
+                          .setTitle("Ganti nickname")
+                          .setView(box)
+                          .setPositiveButton("Simpan", (d, w) -> {
+                              String n = et.getText().toString().trim();
+                              if (n.isEmpty()) {
+                                  toast("Nickname tidak boleh kosong");
+                                  return;
+                              }
+                              prefs.edit().putString("prof_name", n).apply();
+                              toast("Nickname diganti");
+                              if (tab == 2) showTab(2);
+                          })
+                          .setNegativeButton("Batal", null)
+                          .show();
+              }
+
               private View buildProfile() {
+                  LinearLayout col = column();
+                  col.addView(tv("Profile", 24, WHITE, true), lp(-2, -2, 0, 0, 0, dp(12)));
+
+                  GlassBox card = new GlassBox(this, dp(22));
+                  card.setOrientation(LinearLayout.VERTICAL);
+                  card.setGravity(Gravity.CENTER_HORIZONTAL);
+                  card.setPadding(dp(18), dp(18), dp(18), dp(16));
+                  card.setBackground(glass(22));
+                  RgbAvatar av = new RgbAvatar(this, loadProfileBitmap());
+                  av.setOnClickListener(v -> pickProfilePhoto());
+                  pressable(av);
+                  card.addView(av, new LinearLayout.LayoutParams(dp(136), dp(136)));
+                  card.addView(tv(profileName(), 22, WHITE, true), lp(-2, -2, 0, dp(8), 0, 0));
+                  card.addView(tv("Ketuk foto untuk mengganti", 12, 0x99FFFFFF, false), lp(-2, -2, 0, dp(2), 0, 0));
+
+                  LinearLayout btns = new LinearLayout(this);
+                  Button bPhoto = button("Ganti Foto", true);
+                  bPhoto.setTextSize(14);
+                  bPhoto.setOnClickListener(v -> pickProfilePhoto());
+                  Button bName = button("Ganti Nickname", false);
+                  bName.setTextSize(14);
+                  bName.setOnClickListener(v -> editNickname());
+                  btns.addView(bPhoto, lp(0, dp(46), dp(4), 0, dp(4), 0));
+                  btns.addView(bName, lp(0, dp(46), dp(4), 0, dp(4), 0));
+                  ((LinearLayout.LayoutParams) bPhoto.getLayoutParams()).weight = 1f;
+                  ((LinearLayout.LayoutParams) bName.getLayoutParams()).weight = 1f;
+                  card.addView(btns, lp(-1, -2, 0, dp(14), 0, 0));
+                  col.addView(card, new LinearLayout.LayoutParams(-1, -2));
+
+                  LinearLayout stat = new LinearLayout(this);
+                  stat.setOrientation(LinearLayout.VERTICAL);
+                  stat.setPadding(dp(16), dp(16), dp(16), dp(16));
+                  stat.setBackground(glass(20));
+                  stat.addView(tv("Total download: " + history().length(), 15, WHITE, true));
+                  stat.addView(tv("Video: Movies/AllInOneDownloader\nFoto: Pictures/AllInOneDownloader\nAudio: Music/AllInOneDownloader",
+                          13, 0xCCFFFFFF, false), lp(-2, -2, 0, dp(8), 0, 0));
+                  col.addView(stat, lp(-1, -2, 0, dp(14), 0, 0));
+                  return scroll(col);
+              }
+
+              // ---------- ABOUT (terpisah dari Profile) ----------
+              private View buildAbout() {
                   LinearLayout col = column();
                   col.addView(tv("About", 24, WHITE, true), lp(-2, -2, 0, 0, 0, dp(12)));
 
-                  GlassBox about = new GlassBox(this, dp(22));
-                  about.setOrientation(LinearLayout.VERTICAL);
-                  about.setPadding(dp(18), dp(18), dp(18), dp(10));
-                  about.setBackground(glass(22));
+                  GlassBox app = new GlassBox(this, dp(22));
+                  app.setOrientation(LinearLayout.VERTICAL);
+                  app.setPadding(dp(18), dp(18), dp(18), dp(10));
+                  app.setBackground(glass(22));
                   ImageView logo = new ImageView(this);
                   logo.setImageResource(R.drawable.ic_logo_aiod);
-                  about.addView(logo, lp(dp(72), dp(72), 0, 0, 0, dp(8)));
-                  about.addView(infoRow("Profil", "AIOD"));
-                  about.addView(divider());
-                  about.addView(infoRow("Nama", "All In One Downloader"));
-                  about.addView(divider());
-                  about.addView(infoRow("APK", "Khusus dibuat untuk Downloader"));
-                  about.addView(divider());
-                  about.addView(infoRow("Versi", APP_VERSION));
-                  col.addView(about, new LinearLayout.LayoutParams(-1, -2));
+                  app.addView(logo, lp(dp(72), dp(72), 0, 0, 0, dp(8)));
+                  app.addView(infoRow("Nama", "All In One Downloader"));
+                  app.addView(divider());
+                  app.addView(infoRow("APK", "Khusus dibuat untuk Downloader"));
+                  app.addView(divider());
+                  app.addView(infoRow("Versi", APP_VERSION));
+                  col.addView(app, new LinearLayout.LayoutParams(-1, -2));
 
-                  col.addView(tv("Profile", 20, WHITE, true), lp(-2, -2, 0, dp(20), 0, dp(8)));
-                  LinearLayout card = new LinearLayout(this);
-                  card.setOrientation(LinearLayout.VERTICAL);
-                  card.setPadding(dp(16), dp(16), dp(16), dp(16));
-                  card.setBackground(glass(20));
-                  card.addView(tv("Total download: " + history().length(), 15, WHITE, true));
-                  card.addView(tv("Video: Movies/AllInOneDownloader\nFoto: Pictures/AllInOneDownloader\nAudio: Music/AllInOneDownloader",
-                          13, 0xCCFFFFFF, false), lp(-2, -2, 0, dp(8), 0, 0));
-                  col.addView(card, new LinearLayout.LayoutParams(-1, -2));
+                  col.addView(tv("About Gua", 20, WHITE, true), lp(-2, -2, 0, dp(20), 0, dp(8)));
+                  LinearLayout me = new LinearLayout(this);
+                  me.setOrientation(LinearLayout.VERTICAL);
+                  me.setPadding(dp(18), dp(16), dp(18), dp(16));
+                  me.setBackground(glass(22));
+                  me.addView(tv("Aplikasi ini dibuat untuk download semua tipe aplikasi", 15, WHITE, false));
+                  me.addView(tv("\u00A9 Yenaa San", 14, 0xCCFFFFFF, true), lp(-2, -2, 0, dp(12), 0, 0));
+                  col.addView(me, new LinearLayout.LayoutParams(-1, -2));
                   return scroll(col);
               }
 
@@ -1647,6 +2222,36 @@ jobs:
                   });
                   pressable(muteRow);
                   col.addView(muteRow, lp(-1, -2, 0, dp(12), 0, 0));
+
+                  // opacity wallpaper
+                  int a0 = prefs.getInt("wall_alpha", 100);
+                  final TextView opLabel = tv("Opacity Wallpaper: " + a0 + "%", 15, WHITE, true);
+                  col.addView(opLabel, lp(-2, -2, 0, dp(16), 0, 0));
+                  SeekBar op = new SeekBar(this);
+                  op.setMax(90);
+                  op.setProgress(a0 - 10);
+                  op.setProgressTintList(ColorStateList.valueOf(cAcc));
+                  op.setThumbTintList(ColorStateList.valueOf(cAcc));
+                  op.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                      @Override
+                      public void onProgressChanged(SeekBar sk, int pr, boolean user) {
+                          int val = pr + 10;
+                          opLabel.setText("Opacity Wallpaper: " + val + "%");
+                          if (user) {
+                              prefs.edit().putInt("wall_alpha", val).apply();
+                              applyWallAlpha();
+                          }
+                      }
+
+                      @Override
+                      public void onStartTrackingTouch(SeekBar sk) {
+                      }
+
+                      @Override
+                      public void onStopTrackingTouch(SeekBar sk) {
+                      }
+                  });
+                  col.addView(op, lp(-1, -2, 0, dp(4), 0, 0));
 
                   return scroll(col);
               }
