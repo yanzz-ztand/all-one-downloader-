@@ -73,7 +73,7 @@ jobs:
                   minSdk 29
                   targetSdk 34
                   versionCode 2
-                  versionName "2.0"
+                  versionName "1.0"
               }
 
               compileOptions {
@@ -95,6 +95,7 @@ jobs:
                   android:allowBackup="true"
                   android:usesCleartextTraffic="true"
                   android:icon="@mipmap/ic_launcher"
+                  android:roundIcon="@mipmap/ic_launcher_round"
                   android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
                   <activity
                       android:name=".MainActivity"
@@ -270,10 +271,147 @@ jobs:
           </vector>
           EOF
 
+          mkdir -p app/src/main/res/mipmap-anydpi-v26
+
+          cat > app/src/main/res/drawable/ic_volume_on.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M3 9v6h4l5 5V4L7 9H3zM16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-0.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89 0.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-0.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_volume_off.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c0.03-0.2 0.05-0.41 0.05-0.63zM19 12c0 0.94-0.2 1.82-0.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89 0.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-0.67 0.52-1.42 0.93-2.25 1.18v2.06c1.38-0.31 2.63-0.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_delete.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M6 19c0 1.1 0.9 2 2 2h8c1.1 0 2-0.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_all.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M4 8h4V4H4v4zM10 20h4v-4h-4v4zM4 20h4v-4H4v4zM4 14h4v-4H4v4zM10 14h4v-4h-4v4zM16 4v4h4V4h-4zM10 8h4V4h-4v4zM16 14h4v-4h-4v4zM16 20h4v-4h-4v4z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_video.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M17 10.5V7c0-0.55-0.45-1-1-1H4c-0.55 0-1 0.45-1 1v10c0 0.55 0.45 1 1 1h12c0.55 0 1-0.45 1-1v-3.5l4 4v-11l-4 4z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_music.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M12 3v10.55c-0.59-0.34-1.27-0.55-2-0.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_image.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+              <path android:fillColor="#FFFFFF" android:pathData="M21 19V5c0-1.1-0.9-2-2-2H5c-1.1 0-2 0.9-2 2v14c0 1.1 0.9 2 2 2h14c1.1 0 2-0.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_logo_aiod.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+              <path android:pathData="M24 0H84A24 24 0 0 1 108 24V84A24 24 0 0 1 84 108H24A24 24 0 0 1 0 84V24A24 24 0 0 1 24 0Z">
+                  <aapt:attr name="android:fillColor">
+                      <gradient android:type="linear" android:startX="0" android:startY="0" android:endX="108" android:endY="108">
+                          <item android:offset="0.0" android:color="#7C3AED"/>
+                          <item android:offset="0.55" android:color="#2563EB"/>
+                          <item android:offset="1.0" android:color="#06B6D4"/>
+                      </gradient>
+                  </aapt:attr>
+              </path>
+              <path android:fillColor="#2EFFFFFF" android:pathData="M24 0H84A24 24 0 0 1 108 24V40C80 54 28 54 0 40V24A24 24 0 0 1 24 0Z"/>
+              <path android:fillColor="#FFFFFF" android:pathData="M49 27h10v15h9l-14 15l-14-15h9z"/>
+              <path android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M30 81L35 67L40 81M32 76.5H38"/>
+              <path android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:pathData="M46 67V81"/>
+              <path android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M52 74a5 7 0 1 0 10 0a5 7 0 1 0 -10 0z"/>
+              <path android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M68 67h3a7 7 0 0 1 0 14h-3z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_launcher_bg.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+              <path android:pathData="M0 0h108v108h-108z">
+                  <aapt:attr name="android:fillColor">
+                      <gradient android:type="linear" android:startX="0" android:startY="0" android:endX="108" android:endY="108">
+                          <item android:offset="0.0" android:color="#7C3AED"/>
+                          <item android:offset="0.55" android:color="#2563EB"/>
+                          <item android:offset="1.0" android:color="#06B6D4"/>
+                      </gradient>
+                  </aapt:attr>
+              </path>
+              <path android:fillColor="#2EFFFFFF" android:pathData="M0 0h108v42C80 56 28 56 0 42z"/>
+          </vector>
+          EOF
+
+          cat > app/src/main/res/drawable/ic_launcher_fg.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+              <group android:pivotX="54" android:pivotY="54" android:scaleX="0.88" android:scaleY="0.88">
+                  <path android:fillColor="#FFFFFF" android:pathData="M49 27h10v15h9l-14 15l-14-15h9z"/>
+                  <path android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M30 81L35 67L40 81M32 76.5H38"/>
+                  <path android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:pathData="M46 67V81"/>
+                  <path android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M52 74a5 7 0 1 0 10 0a5 7 0 1 0 -10 0z"/>
+                  <path android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M68 67h3a7 7 0 0 1 0 14h-3z"/>
+              </group>
+          </vector>
+          EOF
+
+          for n in ic_launcher ic_launcher_round; do
+          cat > app/src/main/res/mipmap-anydpi-v26/$n.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+              <background android:drawable="@drawable/ic_launcher_bg"/>
+              <foreground android:drawable="@drawable/ic_launcher_fg"/>
+              <monochrome android:drawable="@drawable/ic_launcher_fg"/>
+          </adaptive-icon>
+          EOF
+          done
+
           cat > app/src/main/java/com/all/downloader/MainActivity.java <<'EOF'
           package com.all.downloader;
 
           import android.app.Activity;
+          import android.animation.Animator;
+          import android.animation.AnimatorListenerAdapter;
+          import android.animation.ValueAnimator;
+          import android.graphics.LinearGradient;
+          import android.graphics.Path;
+          import android.graphics.Shader;
+          import android.graphics.drawable.Drawable;
+          import android.graphics.drawable.LayerDrawable;
+          import android.view.MotionEvent;
+          import android.view.ViewGroup;
+          import android.view.animation.AccelerateDecelerateInterpolator;
+          import android.view.animation.DecelerateInterpolator;
+          import android.view.animation.OvershootInterpolator;
           import android.content.ClipboardManager;
           import android.content.ContentResolver;
           import android.content.ContentValues;
@@ -340,6 +478,7 @@ jobs:
               private static final String UA = "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36";
               private static final int REQ_PICK = 101;
               private static final int WHITE = Color.WHITE;
+              private static final String APP_VERSION = "1.0";
 
               // {bg, card, accent, accent2}
               private static final int[][] PRESETS = {
@@ -354,9 +493,113 @@ jobs:
               static class Task {
                   String name = "";
                   String label = "0%";
+                  String mb = "";
                   int progress = -1;
                   ProgressBar bar;
                   TextView pct;
+                  TextView mbView;
+              }
+
+              // panel kaca ala iPhone: pinggir bercahaya + kilau yang menyapu pelan
+              static class GlassBox extends LinearLayout {
+                  private final Paint rim = new Paint(Paint.ANTI_ALIAS_FLAG);
+                  private final Paint sheen = new Paint(Paint.ANTI_ALIAS_FLAG);
+                  private final RectF rf = new RectF();
+                  private final RectF rr = new RectF();
+                  private final Path clip = new Path();
+                  private final Matrix mx = new Matrix();
+                  private final float rad;
+                  private LinearGradient sheenShader;
+                  private float t = -1f;
+                  private ValueAnimator anim;
+                  private final Runnable loop = new Runnable() {
+                      @Override
+                      public void run() {
+                          sweep();
+                      }
+                  };
+
+                  GlassBox(Context c, int radiusPx) {
+                      super(c);
+                      rad = radiusPx;
+                      setWillNotDraw(false);
+                      rim.setStyle(Paint.Style.STROKE);
+                      rim.setStrokeWidth(c.getResources().getDisplayMetrics().density * 1.2f);
+                  }
+
+                  @Override
+                  protected void onSizeChanged(int w, int h, int ow, int oh) {
+                      super.onSizeChanged(w, h, ow, oh);
+                      rf.set(0, 0, w, h);
+                      float half = rim.getStrokeWidth() / 2f;
+                      rr.set(half, half, w - half, h - half);
+                      clip.reset();
+                      clip.addRoundRect(rf, rad, rad, Path.Direction.CW);
+                      rim.setShader(new LinearGradient(0, 0, w * 0.5f, h,
+                              new int[]{0xAAFFFFFF, 0x14FFFFFF, 0x44FFFFFF}, new float[]{0f, 0.55f, 1f}, Shader.TileMode.CLAMP));
+                      float band = Math.max(1f, w * 0.4f);
+                      sheenShader = new LinearGradient(0, 0, band, 0,
+                              new int[]{0x00FFFFFF, 0x2EFFFFFF, 0x00FFFFFF}, null, Shader.TileMode.CLAMP);
+                      sheen.setShader(sheenShader);
+                  }
+
+                  @Override
+                  protected void dispatchDraw(Canvas cv) {
+                      super.dispatchDraw(cv);
+                      if (t >= 0f && sheenShader != null) {
+                          float w = getWidth();
+                          float band = w * 0.4f;
+                          mx.reset();
+                          mx.setRotate(16f);
+                          mx.postTranslate(-band + t * (w + band * 2f), 0f);
+                          sheenShader.setLocalMatrix(mx);
+                          cv.save();
+                          cv.clipPath(clip);
+                          cv.drawRect(rf, sheen);
+                          cv.restore();
+                      }
+                      cv.drawRoundRect(rr, rad, rad, rim);
+                  }
+
+                  private void sweep() {
+                      if (anim != null) anim.cancel();
+                      anim = ValueAnimator.ofFloat(0f, 1f);
+                      anim.setDuration(1300);
+                      anim.setInterpolator(new AccelerateDecelerateInterpolator());
+                      anim.addUpdateListener(a -> {
+                          t = (float) a.getAnimatedValue();
+                          invalidate();
+                      });
+                      anim.addListener(new AnimatorListenerAdapter() {
+                          private boolean cancelled = false;
+
+                          @Override
+                          public void onAnimationCancel(Animator a) {
+                              cancelled = true;
+                          }
+
+                          @Override
+                          public void onAnimationEnd(Animator a) {
+                              t = -1f;
+                              invalidate();
+                              if (!cancelled && isAttachedToWindow()) postDelayed(loop, 4200);
+                          }
+                      });
+                      anim.start();
+                  }
+
+                  @Override
+                  protected void onAttachedToWindow() {
+                      super.onAttachedToWindow();
+                      postDelayed(loop, 600 + (long) (Math.random() * 1500));
+                  }
+
+                  @Override
+                  protected void onDetachedFromWindow() {
+                      super.onDetachedFromWindow();
+                      removeCallbacks(loop);
+                      if (anim != null) anim.cancel();
+                  }
               }
 
               // lingkaran loading warna-warni yang berputar
@@ -490,8 +733,91 @@ jobs:
                   b.setTextSize(16);
                   b.setTextColor(WHITE);
                   b.setTypeface(Typeface.DEFAULT_BOLD);
-                  b.setBackground(primary ? grad(cAcc, cAcc2, 27) : shape(withAlpha(cCard, 0xDD), 27));
+                  b.setStateListAnimator(null);
+                  if (primary) {
+                      GradientDrawable g = grad(cAcc, cAcc2, 27);
+                      g.setStroke(Math.max(1, dp(1)), 0x55FFFFFF);
+                      b.setBackground(g);
+                  } else {
+                      b.setBackground(glass(27));
+                  }
+                  pressable(b);
                   return b;
+              }
+
+              // ---------- efek kaca (glass) ala iPhone ----------
+              private Drawable glass(int r) {
+                  GradientDrawable tint = shape(withAlpha(cBg, 0x66), r);
+                  GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                          new int[]{0x38FFFFFF, 0x10FFFFFF});
+                  g.setCornerRadius(dp(r));
+                  g.setStroke(Math.max(1, dp(1)), 0x40FFFFFF);
+                  return new LayerDrawable(new Drawable[]{tint, g});
+              }
+
+              private Drawable selPill() {
+                  GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                          new int[]{withAlpha(cAcc, 0xB0), withAlpha(cAcc2, 0x70)});
+                  g.setCornerRadius(dp(18));
+                  g.setStroke(Math.max(1, dp(1)), 0x66FFFFFF);
+                  return g;
+              }
+
+              // tekan = mengecil, lepas = membal (seperti sentuhan iOS)
+              private void pressable(View v) {
+                  v.setOnTouchListener((view, e) -> {
+                      int a = e.getActionMasked();
+                      if (a == MotionEvent.ACTION_DOWN) {
+                          view.animate().scaleX(0.95f).scaleY(0.95f).setStartDelay(0).setDuration(120)
+                                  .setInterpolator(new DecelerateInterpolator()).start();
+                      } else if (a == MotionEvent.ACTION_UP || a == MotionEvent.ACTION_CANCEL) {
+                          view.animate().scaleX(1f).scaleY(1f).setStartDelay(0).setDuration(420)
+                                  .setInterpolator(new OvershootInterpolator(3f)).start();
+                      }
+                      return false;
+                  });
+              }
+
+              // isi halaman muncul bergantian dari bawah
+              private void animateIn(View v) {
+                  if (!(v instanceof ScrollView)) return;
+                  ScrollView sv = (ScrollView) v;
+                  if (sv.getChildCount() == 0 || !(sv.getChildAt(0) instanceof ViewGroup)) return;
+                  ViewGroup g = (ViewGroup) sv.getChildAt(0);
+                  for (int i = 0; i < g.getChildCount(); i++) {
+                      View c = g.getChildAt(i);
+                      c.setAlpha(0f);
+                      c.setTranslationY(dp(22));
+                      c.animate().alpha(1f).translationY(0f).setStartDelay(Math.min(i, 8) * 50L).setDuration(450)
+                              .setInterpolator(new DecelerateInterpolator(2f)).start();
+                  }
+              }
+
+              private String mbText(long got, long len) {
+                  if (len > 0) return String.format(Locale.US, "%.1f / %.1f MB", got / 1048576f, len / 1048576f);
+                  return String.format(Locale.US, "%.1f MB", got / 1048576f);
+              }
+
+              private boolean isMuted() {
+                  return prefs.getBoolean("wall_mute", true);
+              }
+
+              private boolean isVideoWall() {
+                  return "video".equals(prefs.getString("wall_type", "")) && prefs.getString("wall_path", null) != null;
+              }
+
+              private void toggleMute() {
+                  boolean m = !isMuted();
+                  prefs.edit().putBoolean("wall_mute", m).apply();
+                  if (player != null) {
+                      try {
+                          float vol = m ? 0f : 1f;
+                          player.setVolume(vol, vol);
+                      } catch (Exception ignored) {
+                      }
+                  }
+                  if (!isVideoWall()) toast("Disimpan, berlaku untuk wallpaper video");
+                  else toast(m ? "Wallpaper di-mute" : "Wallpaper unmute");
               }
 
               // ---------- theme ----------
@@ -623,7 +949,8 @@ jobs:
                       player.setDataSource(path);
                       player.setSurface(videoSurface);
                       player.setLooping(true);
-                      player.setVolume(0f, 0f);
+                      float vol = isMuted() ? 0f : 1f;
+                      player.setVolume(vol, vol);
                       player.setOnErrorListener((mp, what, extra) -> true);
                       player.setOnVideoSizeChangedListener((mp, w, h) -> fitVideo(w, h));
                       player.setOnPreparedListener(mp -> mp.start());
@@ -728,10 +1055,11 @@ jobs:
                   content = new FrameLayout(this);
                   ui.addView(content, new LinearLayout.LayoutParams(-1, 0, 1f));
 
-                  navBox = new LinearLayout(this);
-                  navBox.setOrientation(LinearLayout.HORIZONTAL);
-                  navBox.setPadding(dp(6), dp(8), dp(6), dp(8));
-                  navBox.setBackground(shape(withAlpha(cCard, 0xEE), 26));
+                  GlassBox nb = new GlassBox(this, dp(26));
+                  nb.setOrientation(LinearLayout.HORIZONTAL);
+                  nb.setPadding(dp(6), dp(8), dp(6), dp(8));
+                  nb.setBackground(glass(26));
+                  navBox = nb;
                   ui.addView(navBox, lp(-1, -2, dp(14), dp(4), dp(14), dp(12)));
 
                   root.addView(ui, new FrameLayout.LayoutParams(-1, -1));
@@ -747,6 +1075,7 @@ jobs:
                   else if (t == 2) v = buildProfile();
                   else v = buildSettings();
                   content.addView(v, new FrameLayout.LayoutParams(-1, -1));
+                  animateIn(v);
                   refreshNav();
               }
 
@@ -761,13 +1090,20 @@ jobs:
                       item.setGravity(Gravity.CENTER);
                       item.setPadding(0, dp(6), 0, dp(6));
                       boolean sel = (i == tab);
-                      if (sel) item.setBackground(shape(withAlpha(cAcc, 0x66), 18));
+                      if (sel) {
+                          item.setBackground(selPill());
+                          item.setScaleX(0.86f);
+                          item.setScaleY(0.86f);
+                          item.animate().scaleX(1f).scaleY(1f).setStartDelay(0).setDuration(450)
+                                  .setInterpolator(new OvershootInterpolator(2.5f)).start();
+                      }
                       ImageView ic = icon(icons[i], 0, sel ? WHITE : 0xAAFFFFFF);
                       TextView lb = tv(labels[i], 12, sel ? WHITE : 0xAAFFFFFF, sel);
                       lb.setGravity(Gravity.CENTER);
                       item.addView(ic, new LinearLayout.LayoutParams(dp(24), dp(24)));
                       item.addView(lb);
                       item.setOnClickListener(v -> showTab(idx));
+                      pressable(item);
                       LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, -2, 1f);
                       p.setMargins(dp(3), 0, dp(3), 0);
                       navBox.addView(item, p);
@@ -791,7 +1127,12 @@ jobs:
                   LinearLayout head = new LinearLayout(this);
                   head.setGravity(Gravity.CENTER_VERTICAL);
                   ImageView logo = icon(R.drawable.ic_download, 14, WHITE);
-                  logo.setBackground(grad(cAcc, cAcc2, 16));
+                  GradientDrawable logoBg = grad(cAcc, cAcc2, 16);
+                  logoBg.setStroke(Math.max(1, dp(1)), 0x66FFFFFF);
+                  logo.setBackground(logoBg);
+                  logo.setContentDescription("Riwayat download");
+                  logo.setOnClickListener(v -> showTab(1));
+                  pressable(logo);
                   head.addView(logo, new LinearLayout.LayoutParams(dp(56), dp(56)));
                   LinearLayout titles = new LinearLayout(this);
                   titles.setOrientation(LinearLayout.VERTICAL);
@@ -800,17 +1141,30 @@ jobs:
                   LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(0, -2, 1f);
                   tp.leftMargin = dp(12);
                   head.addView(titles, tp);
+                  if (isVideoWall()) {
+                      final ImageView mu = icon(isMuted() ? R.drawable.ic_volume_off : R.drawable.ic_volume_on, 10, WHITE);
+                      mu.setBackground(glass(20));
+                      mu.setOnClickListener(v -> {
+                          toggleMute();
+                          mu.setImageResource(isMuted() ? R.drawable.ic_volume_off : R.drawable.ic_volume_on);
+                      });
+                      pressable(mu);
+                      head.addView(mu, lp(dp(40), dp(40), 0, 0, dp(8), 0));
+                  }
                   ImageView cp = icon(R.drawable.ic_paste, 10, WHITE);
-                  cp.setBackground(shape(withAlpha(cCard, 0xCC), 20));
+                  cp.setBackground(glass(20));
                   cp.setOnClickListener(v -> pasteClipboard());
+                  pressable(cp);
                   head.addView(cp, new LinearLayout.LayoutParams(dp(40), dp(40)));
                   col.addView(head, new LinearLayout.LayoutParams(-1, -2));
 
                   // kartu paste link
-                  LinearLayout card = new LinearLayout(this);
+                  GlassBox card = new GlassBox(this, dp(22));
                   card.setOrientation(LinearLayout.VERTICAL);
                   card.setPadding(dp(16), dp(14), dp(16), dp(16));
-                  card.setBackground(grad(withAlpha(cAcc, 0xCC), withAlpha(cAcc2, 0xAA), 22));
+                  GradientDrawable cardBg = grad(withAlpha(cAcc, 0xCC), withAlpha(cAcc2, 0xAA), 22);
+                  cardBg.setStroke(Math.max(1, dp(1)), 0x33FFFFFF);
+                  card.setBackground(cardBg);
                   card.addView(tv("Paste link here", 18, WHITE, false));
 
                   FrameLayout box = new FrameLayout(this);
@@ -846,6 +1200,12 @@ jobs:
                   card.addView(box, lp(-1, -2, 0, dp(10), 0, 0));
                   col.addView(card, lp(-1, -2, 0, dp(16), 0, 0));
 
+                  // tipe download
+                  col.addView(tv("Tipe download", 15, 0xCCFFFFFF, true), lp(-2, -2, dp(2), dp(16), 0, dp(6)));
+                  LinearLayout typeRow = new LinearLayout(this);
+                  fillTypeRow(typeRow);
+                  col.addView(typeRow, new LinearLayout.LayoutParams(-1, -2));
+
                   // grid platform
                   String[] pn = {"TikTok", "YouTube", "Instagram", "Facebook", "Twitter", "Spotify"};
                   LinearLayout grid = new LinearLayout(this);
@@ -857,12 +1217,13 @@ jobs:
                           LinearLayout tile = new LinearLayout(this);
                           tile.setOrientation(LinearLayout.VERTICAL);
                           tile.setGravity(Gravity.CENTER);
-                          tile.setBackground(shape(withAlpha(cCard, 0xCC), 18));
+                          tile.setBackground(glass(18));
                           tile.addView(platformIcon(i), new LinearLayout.LayoutParams(dp(44), dp(44)));
                           TextView lb = tv(pn[i], 13, WHITE, false);
                           lb.setGravity(Gravity.CENTER);
                           tile.addView(lb, lp(-2, -2, 0, dp(6), 0, 0));
                           tile.setOnClickListener(v -> toast(pn[i] + ": tempel link lalu tekan Download"));
+                          pressable(tile);
                           LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, dp(92), 1f);
                           p.setMargins(dp(5), dp(5), dp(5), dp(5));
                           row.addView(tile, p);
@@ -886,20 +1247,46 @@ jobs:
                   return scroll(col);
               }
 
+              private void fillTypeRow(final LinearLayout row) {
+                  row.removeAllViews();
+                  int cur = prefs.getInt("dl_type", 0);
+                  int[] ics = {R.drawable.ic_all, R.drawable.ic_video, R.drawable.ic_music, R.drawable.ic_image};
+                  String[] names = {"All", "Video", "Audio", "Foto"};
+                  for (int i = 0; i < 4; i++) {
+                      final int idx = i;
+                      boolean sel = (i == cur);
+                      LinearLayout chip = new LinearLayout(this);
+                      chip.setOrientation(LinearLayout.VERTICAL);
+                      chip.setGravity(Gravity.CENTER);
+                      chip.setPadding(0, dp(10), 0, dp(8));
+                      chip.setBackground(sel ? selPill() : glass(16));
+                      chip.addView(icon(ics[i], 0, sel ? WHITE : 0xAAFFFFFF), new LinearLayout.LayoutParams(dp(26), dp(26)));
+                      TextView lb = tv(names[i], 12, sel ? WHITE : 0xCCFFFFFF, sel);
+                      lb.setGravity(Gravity.CENTER);
+                      chip.addView(lb, lp(-2, -2, 0, dp(4), 0, 0));
+                      chip.setOnClickListener(v -> {
+                          prefs.edit().putInt("dl_type", idx).apply();
+                          fillTypeRow(row);
+                      });
+                      pressable(chip);
+                      LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, -2, 1f);
+                      p.setMargins(dp(4), 0, dp(4), 0);
+                      row.addView(chip, p);
+                  }
+              }
+
               private void refreshRecent() {
                   if (recentBox == null || tab != 0) return;
                   recentBox.removeAllViews();
                   for (Task t : tasks) {
-                      recentBox.addView(makeRow(t.name, t.progress, t.progress < 0, t.label, t, null),
-                              lp(-1, -2, 0, 0, 0, dp(8)));
+                      recentBox.addView(taskRow(t), lp(-1, -2, 0, 0, 0, dp(8)));
                   }
                   JSONArray h = history();
                   int shown = 0;
                   for (int i = h.length() - 1; i >= 0 && shown < 4; i--) {
                       JSONObject o = h.optJSONObject(i);
                       if (o == null) continue;
-                      recentBox.addView(makeRow(o.optString("title"), 100, false, "Selesai", null, o),
-                              lp(-1, -2, 0, 0, 0, dp(8)));
+                      recentBox.addView(historyRow(o, false), lp(-1, -2, 0, 0, 0, dp(8)));
                       shown++;
                   }
                   if (recentBox.getChildCount() == 0) {
@@ -907,40 +1294,41 @@ jobs:
                   }
               }
 
-              private View makeRow(String title, int progress, boolean indet, String right, Task t, final JSONObject item) {
+              // baris download yang sedang berjalan: ukuran MB dibuat besar
+              private View taskRow(Task t) {
                   LinearLayout r = new LinearLayout(this);
                   r.setGravity(Gravity.CENTER_VERTICAL);
-                  r.setPadding(dp(10), dp(10), dp(12), dp(10));
-                  r.setBackground(shape(withAlpha(cCard, 0xCC), 16));
+                  r.setPadding(dp(12), dp(12), dp(14), dp(12));
+                  r.setBackground(glass(18));
 
-                  if (item != null) {
-                      ImageView ic = icon(R.drawable.ic_check, 10, WHITE);
-                      ic.setBackground(shape(withAlpha(cAcc, 0x77), 12));
-                      r.addView(ic, new LinearLayout.LayoutParams(dp(42), dp(42)));
-                  } else {
-                      FrameLayout holder = new FrameLayout(this);
-                      ImageView ic = icon(R.drawable.ic_download, 12, WHITE);
-                      ic.setBackground(shape(withAlpha(cAcc, 0x55), 21));
-                      holder.addView(ic, new FrameLayout.LayoutParams(-1, -1));
-                      holder.addView(new RainbowSpinner(this), new FrameLayout.LayoutParams(-1, -1));
-                      r.addView(holder, new LinearLayout.LayoutParams(dp(44), dp(44)));
-                  }
+                  FrameLayout holder = new FrameLayout(this);
+                  ImageView ic = icon(R.drawable.ic_download, 12, WHITE);
+                  ic.setBackground(shape(withAlpha(cAcc, 0x55), 24));
+                  holder.addView(ic, new FrameLayout.LayoutParams(-1, -1));
+                  holder.addView(new RainbowSpinner(this), new FrameLayout.LayoutParams(-1, -1));
+                  r.addView(holder, new LinearLayout.LayoutParams(dp(48), dp(48)));
 
                   LinearLayout mid = new LinearLayout(this);
                   mid.setOrientation(LinearLayout.VERTICAL);
-                  LinearLayout line = new LinearLayout(this);
-                  TextView name = tv(title.isEmpty() ? "Download" : title, 14, WHITE, false);
+                  TextView name = tv(t.name.isEmpty() ? "Download" : t.name, 14, 0xDDFFFFFF, false);
                   name.setSingleLine(true);
                   name.setEllipsize(TextUtils.TruncateAt.END);
-                  line.addView(name, new LinearLayout.LayoutParams(0, -2, 1f));
-                  TextView pct = tv(right, 13, 0xCCFFFFFF, false);
+                  mid.addView(name, new LinearLayout.LayoutParams(-1, -2));
+
+                  LinearLayout line = new LinearLayout(this);
+                  line.setGravity(Gravity.CENTER_VERTICAL);
+                  TextView mb = tv(t.mb.isEmpty() ? "0.0 MB" : t.mb, 20, WHITE, true);
+                  mb.setSingleLine(true);
+                  line.addView(mb, new LinearLayout.LayoutParams(0, -2, 1f));
+                  TextView pct = tv(t.label, 14, 0xCCFFFFFF, true);
                   line.addView(pct, lp(-2, -2, dp(8), 0, 0, 0));
-                  mid.addView(line, new LinearLayout.LayoutParams(-1, -2));
+                  mid.addView(line, lp(-1, -2, 0, dp(2), 0, 0));
 
                   ProgressBar bar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
                   bar.setMax(100);
+                  boolean indet = t.progress < 0;
                   bar.setIndeterminate(indet);
-                  if (!indet) bar.setProgress(progress);
+                  if (!indet) bar.setProgress(t.progress);
                   bar.setProgressTintList(ColorStateList.valueOf(cAcc));
                   bar.setIndeterminateTintList(ColorStateList.valueOf(cAcc));
                   bar.setProgressBackgroundTintList(ColorStateList.valueOf(0x44FFFFFF));
@@ -950,11 +1338,57 @@ jobs:
                   mp.leftMargin = dp(12);
                   r.addView(mid, mp);
 
-                  if (t != null) {
-                      t.bar = bar;
-                      t.pct = pct;
+                  t.bar = bar;
+                  t.pct = pct;
+                  t.mbView = mb;
+                  return r;
+              }
+
+              // baris riwayat: caption (judul) + label Success + ukuran MB
+              private View historyRow(final JSONObject o, boolean withDate) {
+                  LinearLayout r = new LinearLayout(this);
+                  r.setGravity(Gravity.CENTER_VERTICAL);
+                  r.setPadding(dp(12), dp(12), dp(14), dp(12));
+                  r.setBackground(glass(18));
+
+                  String mime = o.optString("mime", "");
+                  int res = mime.startsWith("audio") ? R.drawable.ic_music
+                          : (mime.startsWith("image") ? R.drawable.ic_image : R.drawable.ic_video);
+                  FrameLayout holder = new FrameLayout(this);
+                  ImageView ic = icon(res, 12, WHITE);
+                  ic.setBackground(shape(withAlpha(cAcc, 0x77), 14));
+                  holder.addView(ic, new FrameLayout.LayoutParams(-1, -1));
+                  ImageView okIc = icon(R.drawable.ic_check, 2, WHITE);
+                  okIc.setBackground(shape(0xFF1DB954, 8));
+                  holder.addView(okIc, new FrameLayout.LayoutParams(dp(16), dp(16), Gravity.END | Gravity.BOTTOM));
+                  r.addView(holder, new LinearLayout.LayoutParams(dp(48), dp(48)));
+
+                  LinearLayout mid = new LinearLayout(this);
+                  mid.setOrientation(LinearLayout.VERTICAL);
+                  TextView cap = tv(o.optString("title", "Download"), 14, WHITE, true);
+                  cap.setMaxLines(2);
+                  cap.setEllipsize(TextUtils.TruncateAt.END);
+                  mid.addView(cap, new LinearLayout.LayoutParams(-1, -2));
+
+                  TextView st = tv("Success downloaded", 11, WHITE, true);
+                  st.setPadding(dp(8), dp(2), dp(8), dp(2));
+                  st.setBackground(shape(withAlpha(0xFF1DB954, 0xD0), 10));
+                  mid.addView(st, lp(-2, -2, 0, dp(6), 0, 0));
+                  if (withDate) {
+                      SimpleDateFormat f = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
+                      mid.addView(tv(f.format(new Date(o.optLong("time"))), 12, 0xAAFFFFFF, false), lp(-2, -2, 0, dp(4), 0, 0));
                   }
-                  if (item != null) r.setOnClickListener(v -> openItem(item));
+                  LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(0, -2, 1f);
+                  mp.leftMargin = dp(12);
+                  r.addView(mid, mp);
+
+                  long size = o.optLong("size", 0);
+                  if (size > 0) {
+                      r.addView(tv(String.format(Locale.US, "%.1f MB", size / 1048576f), 16, WHITE, true),
+                              lp(-2, -2, dp(10), 0, 0, 0));
+                  }
+                  r.setOnClickListener(v -> openItem(o));
+                  pressable(r);
                   return r;
               }
 
@@ -972,19 +1406,46 @@ jobs:
               // ---------- HISTORY ----------
               private View buildHistory() {
                   LinearLayout col = column();
-                  col.addView(tv("History", 24, WHITE, true), lp(-2, -2, 0, 0, 0, dp(12)));
                   JSONArray h = history();
+
+                  LinearLayout head = new LinearLayout(this);
+                  head.setGravity(Gravity.CENTER_VERTICAL);
+                  head.addView(tv("History", 24, WHITE, true), new LinearLayout.LayoutParams(0, -2, 1f));
+                  if (h.length() > 0) {
+                      LinearLayout del = new LinearLayout(this);
+                      del.setGravity(Gravity.CENTER_VERTICAL);
+                      del.setPadding(dp(12), dp(8), dp(14), dp(8));
+                      del.setBackground(glass(20));
+                      del.addView(icon(R.drawable.ic_delete, 0, WHITE), new LinearLayout.LayoutParams(dp(18), dp(18)));
+                      del.addView(tv("Hapus History", 14, WHITE, true), lp(-2, -2, dp(6), 0, 0, 0));
+                      del.setOnClickListener(v -> confirmClear());
+                      pressable(del);
+                      head.addView(del, new LinearLayout.LayoutParams(-2, -2));
+                  }
+                  col.addView(head, lp(-1, -2, 0, 0, 0, dp(12)));
+
                   if (h.length() == 0) {
                       col.addView(tv("Belum ada riwayat download", 14, 0x99FFFFFF, false));
                   }
-                  SimpleDateFormat f = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
                   for (int i = h.length() - 1; i >= 0; i--) {
                       JSONObject o = h.optJSONObject(i);
                       if (o == null) continue;
-                      String when = f.format(new Date(o.optLong("time")));
-                      col.addView(makeRow(o.optString("title"), 100, false, when, null, o), lp(-1, -2, 0, 0, 0, dp(8)));
+                      col.addView(historyRow(o, true), lp(-1, -2, 0, 0, 0, dp(8)));
                   }
                   return scroll(col);
+              }
+
+              private void confirmClear() {
+                  new android.app.AlertDialog.Builder(this)
+                          .setTitle("Hapus history?")
+                          .setMessage("Riwayat dihapus. File yang sudah di-download tetap ada di galeri.")
+                          .setPositiveButton("Hapus", (d, w) -> {
+                              prefs.edit().remove("history").apply();
+                              toast("History dihapus");
+                              showTab(1);
+                          })
+                          .setNegativeButton("Batal", null)
+                          .show();
               }
 
               private void openItem(JSONObject o) {
@@ -1006,7 +1467,7 @@ jobs:
                   }
               }
 
-              private synchronized void addHistory(String title, Uri uri, String mime) {
+              private synchronized void addHistory(String title, Uri uri, String mime, long size) {
                   try {
                       JSONArray old = history();
                       JSONArray n = new JSONArray();
@@ -1016,6 +1477,7 @@ jobs:
                       o.put("title", title);
                       o.put("uri", uri.toString());
                       o.put("mime", mime);
+                      o.put("size", size);
                       o.put("time", System.currentTimeMillis());
                       n.put(o);
                       prefs.edit().putString("history", n.toString()).apply();
@@ -1023,32 +1485,52 @@ jobs:
                   }
               }
 
-              // ---------- PROFILE ----------
+              // ---------- ABOUT + PROFILE ----------
+              private View infoRow(String k, String v) {
+                  LinearLayout r = new LinearLayout(this);
+                  r.setGravity(Gravity.CENTER_VERTICAL);
+                  r.setPadding(0, dp(10), 0, dp(10));
+                  r.addView(tv(k, 13, 0xAAFFFFFF, false), new LinearLayout.LayoutParams(dp(64), -2));
+                  r.addView(tv(v, 15, WHITE, true), new LinearLayout.LayoutParams(0, -2, 1f));
+                  return r;
+              }
+
+              private View divider() {
+                  View d = new View(this);
+                  d.setBackgroundColor(0x22FFFFFF);
+                  d.setLayoutParams(new LinearLayout.LayoutParams(-1, Math.max(1, dp(1))));
+                  return d;
+              }
+
               private View buildProfile() {
                   LinearLayout col = column();
-                  col.addView(tv("Profile", 24, WHITE, true), lp(-2, -2, 0, 0, 0, dp(12)));
+                  col.addView(tv("About", 24, WHITE, true), lp(-2, -2, 0, 0, 0, dp(12)));
 
+                  GlassBox about = new GlassBox(this, dp(22));
+                  about.setOrientation(LinearLayout.VERTICAL);
+                  about.setPadding(dp(18), dp(18), dp(18), dp(10));
+                  about.setBackground(glass(22));
+                  ImageView logo = new ImageView(this);
+                  logo.setImageResource(R.drawable.ic_logo_aiod);
+                  about.addView(logo, lp(dp(72), dp(72), 0, 0, 0, dp(8)));
+                  about.addView(infoRow("Profil", "AIOD"));
+                  about.addView(divider());
+                  about.addView(infoRow("Nama", "All In One Downloader"));
+                  about.addView(divider());
+                  about.addView(infoRow("APK", "Khusus dibuat untuk Downloader"));
+                  about.addView(divider());
+                  about.addView(infoRow("Versi", APP_VERSION));
+                  col.addView(about, new LinearLayout.LayoutParams(-1, -2));
+
+                  col.addView(tv("Profile", 20, WHITE, true), lp(-2, -2, 0, dp(20), 0, dp(8)));
                   LinearLayout card = new LinearLayout(this);
                   card.setOrientation(LinearLayout.VERTICAL);
                   card.setPadding(dp(16), dp(16), dp(16), dp(16));
-                  card.setBackground(shape(withAlpha(cCard, 0xCC), 20));
-                  ImageView av = icon(R.drawable.ic_download, 15, WHITE);
-                  av.setBackground(grad(cAcc, cAcc2, 30));
-                  card.addView(av, new LinearLayout.LayoutParams(dp(60), dp(60)));
-                  card.addView(tv("All In One Downloader", 18, WHITE, true), lp(-2, -2, 0, dp(10), 0, 0));
-                  card.addView(tv("Versi 1.0", 13, 0xAAFFFFFF, false));
-                  card.addView(tv("Total download: " + history().length(), 15, WHITE, false), lp(-2, -2, 0, dp(12), 0, 0));
+                  card.setBackground(glass(20));
+                  card.addView(tv("Total download: " + history().length(), 15, WHITE, true));
                   card.addView(tv("Video: Movies/AllInOneDownloader\nFoto: Pictures/AllInOneDownloader\nAudio: Music/AllInOneDownloader",
                           13, 0xCCFFFFFF, false), lp(-2, -2, 0, dp(8), 0, 0));
                   col.addView(card, new LinearLayout.LayoutParams(-1, -2));
-
-                  Button clr = button("Hapus Riwayat", false);
-                  clr.setOnClickListener(v -> {
-                      prefs.edit().remove("history").apply();
-                      toast("Riwayat dihapus (file tetap ada di galeri)");
-                      showTab(2);
-                  });
-                  col.addView(clr, lp(-1, dp(50), 0, dp(14), 0, 0));
                   return scroll(col);
               }
 
@@ -1069,8 +1551,8 @@ jobs:
                           chip.setOrientation(LinearLayout.VERTICAL);
                           chip.setGravity(Gravity.CENTER);
                           chip.setPadding(0, dp(10), 0, dp(10));
-                          if (idx == cur) chip.setBackground(shape(withAlpha(cAcc, 0x55), 16));
-                          else chip.setBackground(shape(withAlpha(cCard, 0xAA), 16));
+                          chip.setBackground(idx == cur ? selPill() : glass(16));
+                          pressable(chip);
 
                           ImageView sw = icon(R.drawable.ic_check, 10, WHITE);
                           if (idx != cur) sw.setImageDrawable(null);
@@ -1133,13 +1615,38 @@ jobs:
                   col.addView(sb, lp(-1, -2, 0, dp(4), 0, 0));
 
                   col.addView(tv("Wallpaper", 17, WHITE, true), lp(-2, -2, 0, dp(18), 0, dp(4)));
-                  col.addView(tv("Pilih foto atau video dari galeri. Video diputar berulang tanpa suara.", 13, 0xCCFFFFFF, false));
+                  col.addView(tv("Pilih foto atau video dari galeri. Video diputar berulang, suara bisa di-mute / unmute.", 13, 0xCCFFFFFF, false));
                   Button pick = button("Pilih Foto / Video", true);
                   pick.setOnClickListener(v -> pickWallpaper());
                   col.addView(pick, lp(-1, dp(50), 0, dp(10), 0, 0));
                   Button del = button("Hapus Wallpaper", false);
                   del.setOnClickListener(v -> removeCustomWallpaper());
                   col.addView(del, lp(-1, dp(50), 0, dp(8), 0, 0));
+
+                  // mute / unmute wallpaper video
+                  final ImageView mi = icon(isMuted() ? R.drawable.ic_volume_off : R.drawable.ic_volume_on, 10, WHITE);
+                  mi.setBackground(shape(withAlpha(cAcc, 0x88), 20));
+                  final TextView ms = tv(isMuted() ? "Mute (ketuk untuk Unmute)" : "Unmute (ketuk untuk Mute)", 12, 0xCCFFFFFF, false);
+                  LinearLayout muteRow = new LinearLayout(this);
+                  muteRow.setGravity(Gravity.CENTER_VERTICAL);
+                  muteRow.setPadding(dp(12), dp(10), dp(14), dp(10));
+                  muteRow.setBackground(glass(18));
+                  muteRow.addView(mi, new LinearLayout.LayoutParams(dp(40), dp(40)));
+                  LinearLayout mt = new LinearLayout(this);
+                  mt.setOrientation(LinearLayout.VERTICAL);
+                  mt.addView(tv("Suara Wallpaper", 15, WHITE, true));
+                  mt.addView(ms);
+                  LinearLayout.LayoutParams mtp = new LinearLayout.LayoutParams(0, -2, 1f);
+                  mtp.leftMargin = dp(12);
+                  muteRow.addView(mt, mtp);
+                  muteRow.setOnClickListener(v -> {
+                      toggleMute();
+                      boolean m = isMuted();
+                      mi.setImageResource(m ? R.drawable.ic_volume_off : R.drawable.ic_volume_on);
+                      ms.setText(m ? "Mute (ketuk untuk Unmute)" : "Unmute (ketuk untuk Mute)");
+                  });
+                  pressable(muteRow);
+                  col.addView(muteRow, lp(-1, -2, 0, dp(12), 0, 0));
 
                   return scroll(col);
               }
@@ -1155,13 +1662,15 @@ jobs:
                   t.name = "Mengambil info...";
                   tasks.add(0, t);
                   refreshRecent();
-                  new Thread(() -> runDownload(link, t)).start();
+                  final int mode = prefs.getInt("dl_type", 0);
+                  new Thread(() -> runDownload(link, t, mode)).start();
               }
 
-              private void updateTask(final Task t, final int pct, final String label) {
+              private void updateTask(final Task t, final int pct, final String label, final String mb) {
                   runOnUiThread(() -> {
                       t.progress = pct;
                       t.label = label;
+                      t.mb = mb;
                       if (t.bar != null) {
                           if (pct < 0) {
                               t.bar.setIndeterminate(true);
@@ -1171,10 +1680,11 @@ jobs:
                           }
                       }
                       if (t.pct != null) t.pct.setText(label);
+                      if (t.mbView != null) t.mbView.setText(mb.isEmpty() ? "0.0 MB" : mb);
                   });
               }
 
-              private void runDownload(String link, final Task t) {
+              private void runDownload(String link, final Task t, final int mode) {
                   try {
                       JSONObject result = fetchInfo(link);
                       String title = result.optString("title", "").replaceAll("\\s+", " ").trim();
@@ -1184,7 +1694,7 @@ jobs:
                       t.name = shown;
                       runOnUiThread(() -> refreshRecent());
 
-                      Plan plan = pickMedias(result);
+                      Plan plan = pickMedias(result, mode);
                       String base = safeName(title);
                       Exception last = null;
 
@@ -1193,7 +1703,8 @@ jobs:
                           int saved = 0;
                           for (int i = 0; i < n; i++) {
                               try {
-                                  download(plan.list.get(i), shown, base + "_" + (i + 1), link, t, i, n);
+                                  download(plan.list.get(i), n > 1 ? shown + " (" + (i + 1) + "/" + n + ")" : shown,
+                                          base + "_" + (i + 1), link, t, i, n);
                                   saved++;
                               } catch (Exception e) {
                                   last = e;
@@ -1208,7 +1719,7 @@ jobs:
                                   ok = download(plan.list.get(i), shown, base, link, t, 0, 1);
                               } catch (Exception e) {
                                   last = e;
-                                  updateTask(t, -1, "Coba server lain...");
+                                  updateTask(t, -1, "Coba server lain...", "");
                               }
                           }
                           if (ok == null) throw last != null ? last : new Exception("Gagal download");
@@ -1284,7 +1795,7 @@ jobs:
                   return 3;
               }
 
-              private Plan pickMedias(JSONObject result) throws Exception {
+              private Plan pickMedias(JSONObject result, int mode) throws Exception {
                   ArrayList<JSONObject> vids = new ArrayList<>();
                   ArrayList<JSONObject> auds = new ArrayList<>();
                   ArrayList<JSONObject> imgs = new ArrayList<>();
@@ -1312,6 +1823,23 @@ jobs:
                   Collections.sort(vids, (a, b) -> Integer.compare(score(a), score(b)));
 
                   Plan p = new Plan();
+                  // tipe download pilihan user: 1 = video, 2 = audio, 3 = foto, 0 = All (otomatis)
+                  if (mode == 1) {
+                      if (vids.isEmpty()) throw new Exception("Video tidak tersedia untuk link ini");
+                      p.list = vids;
+                      return p;
+                  }
+                  if (mode == 2) {
+                      if (auds.isEmpty()) throw new Exception("Audio tidak tersedia untuk link ini");
+                      p.list = auds;
+                      return p;
+                  }
+                  if (mode == 3) {
+                      if (imgs.isEmpty()) throw new Exception("Foto tidak tersedia untuk link ini");
+                      p.list = imgs;
+                      p.all = true;
+                      return p;
+                  }
                   if (!vids.isEmpty()) p.list = vids;
                   else if (!auds.isEmpty()) p.list = auds;
                   else if (!imgs.isEmpty()) {
@@ -1458,9 +1986,9 @@ jobs:
                               lastTick = now;
                               if (len > 0) {
                                   int overall = (int) ((idx * 100L + (got * 100L / len)) / count);
-                                  updateTask(t, overall, overall + "%");
+                                  updateTask(t, overall, overall + "%", mbText(got, len));
                               } else {
-                                  updateTask(t, -1, String.format(Locale.US, "%.1f MB", got / 1048576f));
+                                  updateTask(t, -1, "Downloading", mbText(got, len));
                               }
                           }
                       }
@@ -1480,30 +2008,11 @@ jobs:
                   done.put(MediaStore.MediaColumns.IS_PENDING, 0);
                   cr.update(out, done, null, null);
 
-                  addHistory(title, out, mime);
+                  addHistory(title, out, mime, got);
                   return out;
               }
           }
           EOF
-
-      - name: Generate app icon
-        run: |
-          # Taruh gambar icon di root repo dengan nama "icon.png" (disarankan persegi, min 512x512)
-          if ! command -v magick >/dev/null 2>&1 && ! command -v convert >/dev/null 2>&1; then
-            sudo apt-get update -y
-            sudo apt-get install -y imagemagick
-          fi
-          if command -v magick >/dev/null 2>&1; then IM=magick; else IM=convert; fi
-          if [ ! -f icon.png ]; then
-            echo "icon.png tidak ditemukan, pakai icon default"
-            $IM -size 512x512 xc:'#8E2DE2' icon.png
-          fi
-          for entry in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
-            dir="app/src/main/res/mipmap-${entry%%:*}"
-            size="${entry##*:}"
-            mkdir -p "$dir"
-            $IM icon.png -gravity center -crop 1:1 +repage -resize ${size}x${size} "$dir/ic_launcher.png"
-          done
 
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
