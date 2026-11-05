@@ -91,7 +91,7 @@ jobs:
               <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
               <application
-                  android:appname="AIOD"
+                  android:label="AIOD"
                   android:allowBackup="true"
                   android:usesCleartextTraffic="true"
                   android:icon="@mipmap/ic_launcher"
